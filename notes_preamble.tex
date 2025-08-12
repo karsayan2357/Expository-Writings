@@ -1,0 +1,44 @@
+\documentclass{book}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\usepackage{amsthm, amsfonts, amssymb, amsmath, fullpage}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\tcbuselibrary{theorems}
+
+%Fonts
+%\usepackage{mathpazo}
+%\usepackage{kpfonts}
+%\usepackage{libertine}
+%\usepackage{XCharter}
+\usepackage{palatino, newpxmath}
+%\usepackage{euler}
+
+%Useless packages
+\usepackage{lipsum}
+
+%defined commands
+%%%%%%%%%%%%%
+% theorem, corollary, lemma, proposition
+\newtcbtheorem[number within=section]{theorem}{Theorem}{colback=blue!10!white, fonttitle=\bfseries}{thm}
+\newtcbtheorem[number within=section]{lemma}{Lemma}{colback=green!5!white, fonttitle=\bfseries}{lem}
+\newtcbtheorem[number within=section]{proposition}{Proposition}{colback=pink!10!white}{prop}
+\newtcbtheorem[use counter from=theorem]{corollary}{Corollary}{colback=blue!5!white}{cor}
+
+
+% definition, examples, problem, solution, remark
+\newtcbtheorem[number within=section]{definition}{Definition}{colback=cyan!5!white, fonttitle=\bfseries}{def}
+\newtcbtheorem[number within=section]{problem}{Problem}{colback=white}{prob}
+\newtheorem{example}{Example}[chapter]
+\newtheorem*{solution}{Solution}
+\newtheorem*{remark}{Remark}
+
+%defined symbols
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\cR}{\mathcal{R}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}

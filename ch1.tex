@@ -1,0 +1,59 @@
+\chapter{Basics}
+
+%%%%%%%%%%%%%%%%%
+% Section 1%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%
+
+
+\section{Basic Notations and Definitions}
+  \begin{definition}{Code}{def:code}
+  	A \textit{code} $\cC$ is a subset of $ \Sigma^n$ where $\Sigma$ is an alphabet, where $n$ is the block length of $\cC$. We typically use $q$ to denote $|\Sigma|$.
+  \end{definition}
+  Another way to view the definition of a code to be a map $\cC: [M]\to \Sigma^n$, where $M = |\mathcal{C}|$. 
+  \begin{definition}{Dimension of a code}{def:dim}
+  	\textit{Dimension} of a code $\cC$, denoted as $k$, is defined as the following way, 
+  	\[
+  	k := \log_q|\cC|.
+  	\]
+  \end{definition}
+  	\begin{remark} Note that, 
+\begin{enumerate}
+		\item For any $\cC\subseteq\Sigma^n$, $k\leq n$.
+	\item $k$ can be non-integral.
+\end{enumerate}
+\end{remark}
+
+One way to quantify \textit{Redundancy} in a code is via its rate.
+\begin{definition}{Rate of a Code}{def:rate}
+	\textit{Rate} of a code $\cC$ of block length $n$ and dimension $k$, denoted as $R$, is defined as 
+	\[
+	R := \frac{k}{n}.
+	\]
+\end{definition}
+
+\begin{example}
+Define a code $\cC\subseteq\{0,1\}^5$ that maps a binary string $(x_1, x_2, x_3, x_4)$ to $(x_1, \ldots, x_4, x_1\oplus\ldots\oplus x_4)$.
+\end{example}
+
+
+%%%%%%%%%%%%%%%%%%
+% Section 2%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+
+\section{Formalizing Error Correction}
+\begin{definition}{Encoding \& Decoding Functions}{def:encode-decode}
+	\begin{itemize}
+\item 	Let $\cC\subseteq \Sigma^n$. An equivalent description of the code $\cC$ is an injective mapping $E : [|\cC|]\to \Sigma^n$ called the \textit{encoding function}.
+\item Let $\cC\subseteq \Sigma^n$ be a code. A mapping $D:\Sigma^n\to[|\cC|]$ is called a \textit{decoding function}.
+	\end{itemize}
+\end{definition}
+
+
+
+
+
+
+
+
+
+
