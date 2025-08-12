@@ -48,12 +48,44 @@ Define a code $\cC\subseteq\{0,1\}^5$ that maps a binary string $(x_1, x_2, x_3,
 	\end{itemize}
 \end{definition}
 
+We can refer to the following figure from now on.
 
+\subsection*{Quantifying Error}
+\begin{definition}{Hamming Distance}{def:ham-dist}
+For any $a, b\in\Sigma^n$, \textit{hamming distance} of $a,b$ is defined as
+\[
+\Delta(a,b) := \# \{i\in[n] : a_i\neq b_i\}
+\]
+where $a = (a_1,\ldots, a_n)$ and $b = (b_1, \ldots, b_n)$. We also define \textit{relative hamming distance} as 
+\[
+\delta (a,b) := \frac{1}{n}\Delta(a,b).
+\]
+\end{definition}
+\begin{remark}
+We can verify easily that this $\Delta$ is actually a distance on $\Sigma^n$.
+\end{remark}
 
+\begin{definition}{Hamming Weight}{def:hamm-weight}
+We define \textit{hamming weight} of an element $v\in\Sigma^n$ as, $wt(c) := \Delta(0,v)$.
+\end{definition}
 
+Refering to the above figure, we define the error for that transmitted codeword to be $\Delta(c,y)$.
 
+\section{Performance of an Error Correcting Code}
 
+\begin{definition}{t-Error Channel \& t-Error Correcting Code}{def:t-error,erasure}
+	\begin{itemize}
+\item \text{(t-Error Channel) : } An $n$ symbol \textit{t-Error Channel} is a relation $ch : \Sigma^n\to \Sigma$ such that $\forall c\in\Sigma^n$, 
+\[
+\Delta(c, ch(c))\leq t.
+\]
+\item \text{(t-Error Correcting Code): } Let $\cC\in\Sigma^n$ is a \textit{t-Error Correcting code} if $\forall$ t-Error Channel $ch$ and $\forall m\in[|\cC|]$ ,
+\[
+D(ch(E(m))) = m.
+\]
+	\end{itemize}
 
-
-
-
+\end{definition}
+\begin{example}
+$\cC_{3,rep}$ is a 1-error correcting code.
+\end{example}
