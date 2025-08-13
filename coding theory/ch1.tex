@@ -48,9 +48,29 @@ Define a code $\cC\subseteq\{0,1\}^5$ that maps a binary string $(x_1, x_2, x_3,
 	\end{itemize}
 \end{definition}
 
-We can refer to the following figure from now on.
+We can refer to the following figure \ref{enc-dec} from now on. 
+\newline
+\begin{figure}[h]
+	\centering
+	\label{enc-dec}
+	\begin{tikzpicture}
+         \node[draw] (mes) {$m$};
+         \node[draw, right=2cm of mes] (enc) {$E(m)$};
+         \node[draw, right=4cm of enc] (chan) {$ch(E(m))$};
+         \node[draw, right=2cm of chan] (dec) {$D(ch(E(m))) = m$};
+         \draw [->] (mes)--(enc);
+         \draw [->] (enc)--(chan);
+         \draw [->] (chan)--(dec);
+         
+         \node (E) at (1.25, 0.25) {$E$};
+         \node (channel) at (5.4, 0.25) {$Noisy\text{ }Channel$};
+         \node (deco) at (10, 0.25) {$D$};
+	\end{tikzpicture}
+		\caption{Encoding-Decoding}
+\end{figure}
 
-\subsection*{Quantifying Error}
+
+\subsection{Quantifying Error}
 \begin{definition}{Hamming Distance}{def:ham-dist}
 For any $a, b\in\Sigma^n$, \textit{hamming distance} of $a,b$ is defined as
 \[
@@ -69,23 +89,84 @@ We can verify easily that this $\Delta$ is actually a distance on $\Sigma^n$.
 We define \textit{hamming weight} of an element $v\in\Sigma^n$ as, $wt(c) := \Delta(0,v)$.
 \end{definition}
 
-Refering to the above figure, we define the error for that transmitted codeword to be $\Delta(c,y)$.
+Refering to the above figure \ref{enc-dec}, we define the error for that transmitted codeword to be $\Delta(c,y)$.
 
 \section{Performance of an Error Correcting Code}
 
 \begin{definition}{t-Error Channel \& t-Error Correcting Code}{def:t-error,erasure}
 	\begin{itemize}
-\item \text{(t-Error Channel) : } An $n$ symbol \textit{t-Error Channel} is a relation $ch : \Sigma^n\to \Sigma$ such that $\forall c\in\Sigma^n$, 
+\item \text{(t-Error Channel)} An $n$ symbol \textit{t-Error Channel} is a relation $ch : \Sigma^n\to \Sigma$ such that $\forall c\in\Sigma^n$, 
 \[
 \Delta(c, ch(c))\leq t.
 \]
-\item \text{(t-Error Correcting Code): } Let $\cC\in\Sigma^n$ is a \textit{t-Error Correcting code} if $\forall$ t-Error Channel $ch$ and $\forall m\in[|\cC|]$ ,
+\item \text{(t-Error Correcting Code)} Let $\cC\in\Sigma^n$ is a \textit{t-Error Correcting code} if $\forall$ t-Error Channel $ch$ and $\forall m\in[|\cC|]$ ,
 \[
 D(ch(E(m))) = m.
 \]
-	\end{itemize}
+\end{itemize}
 
 \end{definition}
 \begin{example}
 $\cC_{3,rep}$ is a 1-error correcting code.
 \end{example}
+\begin{example}
+$\cC_\oplus$ is a 0-error correcting code.
+\end{example}
+
+\subsection{Some weaker Notations}
+\begin{definition}{t-Error Erasure Channel \& t-Error Detecting Code}{def:err-detect}
+       \begin{itemize}
+       	\item (t-Erasure Channel) A \textit{t-Erasure Channel} is a mapping $ch : \Sigma^n\to (\Sigma\cup\{?\})^n$, where $?\notin\Sigma$, such that $\forall a\in\Sigma^n$, 
+       	\[
+       	\Delta(a, ch(a))\leq t.
+       	\]
+       	and for all $i\in[n]$ such that $a_i\neq ch(a)_i$, we would have $ch(a)_i = ?$.
+       	\item (t-Error Detection Code) A code $\cC\subseteq\Sigma^n$ is an \textit{t-Error Detecting code} if there exists a detection procedure $D$ such that $m\in[|C|]$ \& $\forall$ t-Error Channel,
+       	\[
+       	     D(ch(E(m))) = \mathbbm{1}_{\{ch(E(m)) = E(m)\}}.
+       	\]
+       	       	       \end{itemize}
+\end{definition}
+
+\begin{remark}
+      Similarly we can also define a t-Erasure code $\cC\subseteq\Sigma^n$ if $\forall m \in [|C|]$ \& t-Erasure Channel $ch$, 
+      \[
+      D(ch(E(m))) = E(m) \cong m.
+      \]
+\end{remark}
+\begin{example}
+
+\end{example}
+
+\subsection{Error Correction Capability of $\cC_\oplus$ and $\cC_{3,rep}$}
+
+\section{Distance of a Code}
+A parameter for quantifying error correction capability of a code is the distance of that code.
+\begin{definition}{Distance of a Code}{def:dist}
+For a code $\cC\in\Sigma^n$, we define its \textit{distance} as the following 
+\[
+d(\cC) := \min_{
+	\begin{subarray}
+		
+		c_1\neq c_2 \\
+		c_1, c_2\in\cC
+\end{subarray}
+} \Delta(c_1, c_2).
+\]
+\end{definition}
+\begin{example}
+	$d(\cC_\oplus) = 2$ and $d(\cC_{3,rep}) = 3$.
+\end{example}
+
+\begin{proposition}{}{}
+	Given a code $\cC$, the followig are equivalent.
+	\begin{enumerate}
+		\item $\cC$ has minimum distance $d\geq 2$.
+		\item If $d$ is odd, then $\cC$ can correct upto $\frac{d-1}{2}$ many errors.
+		\item $\cC$ can detect $d-1$ many errors.
+		\item $\cC$ can correct $d-1$ many erasures.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+
+\end{proof}
