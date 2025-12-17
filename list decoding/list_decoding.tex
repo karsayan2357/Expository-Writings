@@ -16,6 +16,9 @@
 	
 	\section*{Notations}
 	
+	\noindent We denote a finite set of symbols, called an \emph{alphabet}, by $\Sigma$.
+	\vspace{0.1in}
+	
 	\noindent For $n\in\mathbb{N} := \{1,2,\ldots\}$, we define $[n]$ to be the set $\{1,2,\ldots,n\}$.
 	\vspace{0.1in}
 	
@@ -23,6 +26,9 @@
 	\vspace{0.1in}
 	
 	\noindent Let $q$ be a prime power. Then $\mathbb{F}_q$ denotes the finite field of order $q$.
+	\vspace{0.1in}
+	
+	\noindent We denote the Hamming distance by $\Delta(\bfx,\bfy) := \#\{i\in[n] | x_i \neq y_i\}$ for $\bfx, \bfy\in\Sigma^n$, and the Hamming Ball by $B(\bfy,e):=\{x\in\Sigma^n | \Delta(\bfx,\bfy)\leq e\}$.
 	
 	
 	\newpage
@@ -34,9 +40,9 @@
 	\section{Introduction}
 	First we define what is a list decodable codes.
 	\begin{definition}{}{}
-		Given $0 \leq \rho <1$ and $L\geq1$, a code $\calc$ of block length $n$ over the alphabet $\Sigma$ is said to be $(\rho, L)$\emph{-list decodable} if for all $y\in\Sigma^n$,
+		Given $0 \leq \rho <1$ and $L\geq1$, a code $\calc$ of block length $n$ over the alphabet $\Sigma$ is said to be $(\rho, L)$\emph{-list decodable} if for all $\bfy\in\Sigma^n$,
 		\[
-		\#\{c\in\calc | \Delta(y,c)\leq\rho n\} \leq L.
+		\#\{\bfc\in\calc | \Delta(\bfy,\bfc)\leq\rho n\} \leq L.
 		\]
 	\end{definition}	
 	Here this $\rho$ parameter is called \emph{fraction of error} and $L$ is called the \emph{list size upper bound}. Observe that, if fraction of error is atmost $\rho$, then the required codeword would be in the list. Also if $\calc$ is $(\rho, L)$-list decodable, then the decoding algortithm outputs atmost $L$ many codewords as outputs.
@@ -84,7 +90,7 @@
 		As the code is of distance $d$, then $\Delta(\mathbf{c_i'},\mathbf{c_j'})\geq d$ for all $i\neq j$, thus we get
 		\begin{equation}
 			\label{lb}
-			S \geq \binom{M}{2}d
+			S \geq \binom{M}{2}d.
 		\end{equation}
 		Consider the $n\times M$ matrix $\mathbf{A} = [\mathbf{c_1} : \cdots : \mathbf{c_M}]$. Define $m_i$ to be the number of $1$'s in the $i$-th row of $\mathbf{A}$. Observe that the $i$-th row contributes $m_i(M-m_i)$ to the sum $S$. Thus $S = \sum_im_i(M-m_i)$.  Define $\overline{e} := \frac{1}{M}\sum m_i$. Note that 
 		\[
