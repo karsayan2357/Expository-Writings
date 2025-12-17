@@ -16,7 +16,7 @@
 	
 	\section*{Notations}
 	
-	\noindent We denote a finite set of symbols, called an \emph{alphabet}, by $\Sigma$.
+	\noindent We denote a finite set of symbols, called an \emph{alphabet}, by $\Sigma$. A code $\calc$ of block length $n$ is just a subset of $\Sigma^n$.
 	\vspace{0.1in}
 	
 	\noindent For $n\in\mathbb{N} := \{1,2,\ldots\}$, we define $[n]$ to be the set $\{1,2,\ldots,n\}$.
@@ -227,7 +227,25 @@
 		\end{align*}
 		The first inequality is apparent from going through all the received words and messages possible and using the union bound. Thus, by probabilistic method, there exists a code $\calc$ which is $(\rho, L)$-list decodable. Also the arguement tells us that probability of a random code not being $(\rho, L)$-list decodable goes to 0 as $n\to\infty$. \newline
 		
-	\noindent \textsf{(Proof of $\mathsf{2}$).} 
+	\noindent \textsf{(Proof of $\mathsf{2}$).} We need to show that there exists $\bfy\in[q]^n$ so that $|C\cap B(\bfy,\rho n)|$ is exponentially large for every $\calc$ of rate $R\geq1-H_q(p)+\varepsilon$. Pick $\bfy\in[q]^n$ uniformly at random and fix a $\bfc\in\calc$. Then
+	\begin{align*}
+	\Pr[\bfc\in B(\bfy,\rho n)] 
+	& = \Pr[\bfy\in B(\bfy, \rho n)]\\
+	& = \frac{Vol_q(\rho n,n)}{q^n} \quad \text{[as $\mathbf{y}$ is uniformly random]}\\
+	& \geq q^{-n(1-H_q(\rho)) - o(n)}.\\
+	\end{align*}
+	
+We have 
+\begin{align*}
+	\bbe[|\calc\cap B(\bfy, \rho n)|] 
+	& = \sum_{c\in\calc}\bbe[\mathbbm{1}_{\bfc\in B(\bfy,\rho n)}]\\
+	& = \sum_{c\in\calc}\Pr[\bfc\in B(\bfy,\rho n)] \\
+	& \geq |\calc| \cdot q^{-n(1-H_q(\rho)) - o(n)}\\
+	& = q^{n[R-1+H_q(\rho) - o(1)]}\\
+	& \geq q^{n(\varepsilon -  o(1))}\\
+	& \geq q^{\Omega(\varepsilon n)}.
+\end{align*}
+Hence there exists $\bfy$ so that $|\calc\cap B(\bfy, \rho n)|\geq q^{\Omega(\epsilon n)}$.
 	\end{proof}
 	
 	
