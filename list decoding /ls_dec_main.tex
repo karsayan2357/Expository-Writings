@@ -1,18 +1,27 @@
-\include{new_preamble}
+\include{preamble}
 \begin{document}
+	
+	\pagestyle{empty}
 	\include{titlepage}
 	
+		\vspace*{\fill}
 		\begin{abstract}
 			
 		\noindent In the Hamming setup, we have seen that any code $\calc$ over the alphabet $\Sigma$ with distance $d$ can correct upto $\lfloor\frac{d-1}{2}\rfloor$ errors. The main goal of list decoding is to get past this bound. We shall also see that list decoding is, to an extent, the bridge between Hamming and Shannon through its capacity.
 
-		
+			\vspace*{\fill}
+
 		%% writing left %%% 
 	\end{abstract}
 	
 	\newpage
 	
+	\tableofcontents	
+	
+	\newpage
+	
 	\section*{Notations}
+	\addcontentsline{toc}{section}{\large Notations}
 	
 	\noindent We denote a finite set of symbols, called an \emph{alphabet}, by $\Sigma$. A code $\calc$ of block length $n$ over the alphabet $\Sigma$ is just a subset of $\Sigma^n$.
 	\vspace{0.1in}
@@ -31,7 +40,7 @@
 	
 	\newpage
 	
-	\tableofcontents	
+	\pagestyle{fancy}
 	
 	\newpage
 	
@@ -39,8 +48,12 @@
 	
 	\include{list_decoding}
 	
+	\newpage
 	
-		\begin{thebibliography}{}
+	\include{rs_decode}
+	
+	
+	\begin{thebibliography}{}
 		
 		\bibitem{guruswami}
 		V.~Guruswami, A.~Rudra, and M.~Sudan, \textsf{Essential Coding Theory}, 
