@@ -1,4 +1,6 @@
-\section{Introduction}
+\section{List Decoding}
+
+\subsection{Introduction}
 	First we define what is a list decodable codes.
 	\begin{definition}{}{}
 		Given $0 \leq \rho <1$ and $L\geq1$, a code $\calc$ of block length $n$ over the alphabet $\Sigma$ is said to be $(\rho, L)$\emph{-list decodable} if for all $\bfy\in\Sigma^n$,
@@ -19,12 +21,18 @@
 	We refer to this as the list-decodability of $\mathfrak{C}$ with constant-sized lists. We can also see at a weker limit keeping our algorithmic goal in consideration. For an efficient algorithm, $L$ has to be a polynomial in $n$, as otherwise the output size would be super polynomial, giving us an algorithm not having a polynomial running time. This is the list decodability of $\mathfrak{C}$ with polynomial sized lists. For most of the natural codes, the above two notions are the same. For the rest of our discussion we shall only be interested in list decodability with polynomial sized lists.
 	
 	\subsubsection*{Utility of List Decoding}
+	One of the most useful gain of List Decoding over Unique Decoding is that it generalizes Unique Decoding, as when number of errors is at most half the distance, the list size would be at most one. We shall also see in this section later that for random codes, for most of the error patterns, the list size is at most one with high probability.
 	
+	\subsubsection*{Limitations of List Decoding}
+	Since List decoding is a further generalization of Unique Decoding, it is natural to ask the followig two questions, which we shall answer later in this section.
 	\begin{question}{}{first}
 %		\label{first}
 		Given a code of relative distance $\delta$, can we correct more than $\frac{\delta}{2}$ fraction of errors using list decoding?		
 	\end{question}
 	
+	\begin{question}{}{}
+		Given a code of rate $R$, what is the maximum fraction of errors correctable using list decoding?
+	\end{question}
 	
 	%% writing left %%%%
 	
@@ -112,6 +120,73 @@
 	\begin{theorem}{Alphabet-Free Johnson Bound.}{}
 		For any $q$-ary code $\calc$ of block length $n$ and distance $d$, if $e\leq n - \sqrt{n(n - d)}$, then $\calc$ is $(e/n, qnd)$-list decodable.
 	\end{theorem}
+	\emph{Here I present a Graph Theoretic proof for this theorem with a better list size.}
+	\begin{proof}
+		First we prove the following lemma. 	Let $G = (L,R,E)$ be a bipartite graph with $|L| = l$ and $|R| = r\geq 2$. For any $s\leq l$, we say $G$ is $K_{s,2}$\emph{-free} if there is no subset $L'\subseteq L$ and $R'\subseteq R$ with $|L'| = s$ and $|R'| = 2$ such that $L'\times R'\subseteq E$.
+		
+		\begin{lemma}{}{bip_free}
+		 If $G$ is $K_{s,2}$\emph{-free}, then $|E| \leq l + r\sqrt{l(s-1)}$.
+		\end{lemma}
+		\begin{proof}
+			Note that if $|E|\leq l$, then the inequality is trivial. So let us assume that $|E|>l$. Let $M$ be the adjaceny matrix of $G$ with order $l\times r$ and $M_w$ be the $w$-th column of $M$ for $w\in R$. Define
+			\begin{align*}
+			\bfv 
+			& = \begin{bmatrix}
+ 					v_1 \\
+ 					v_2 \\
+ 					\vdots \\
+ 					v_l
+			\end{bmatrix} = \sum_{w\in R} M_w
+			\end{align*}
+			Note that $v_i$ denotes the size of the neighbourhood set of the $i$-th left vertex, and thus $\sum_i v_i = |E|$. By \emph{Cauchy-Schwarz Inequality}, 
+			\begin{equation}
+				\label{cauchy}
+					l\cdot\lVert \bfv \rVert_2^2 \geq \left(\sum_i v_i\right)^2 = |E|^2.
+			\end{equation}
+			 Now take any $S\subseteq L$ of size $s$ and any two vertices $r_1,r_2\in R$. As $G$ is $K_{s,2}$\emph{-free}, $|N_{r_1}\cap N_{r_2}|\leq s-1$, where $N_w\subseteq L$ denotes the neighbourhood set of $w\in R$. Thus 
+			 \begin{equation}
+			 	\label{sum of neighbours}
+			 \sum_{r_1\neq r_2 \in R} |N_{r_1}\cap N_{r_2}| \leq 2\cdot\binom{r}{2}\cdot(s-1) = r(r-1)(s-1).
+			 \end{equation}
+			 Notice that in the sum in (\ref{sum of neighbours}), the $i$-th vertex contributes exactly how many pairs (unordered) of neighbourhoods there are in $L$ from $R$ so that they both contain that vertex. And the number of such pairs is $2\binom{v_i}{2} = v_i^2 - v_i$. So from the inequality of (\ref{cauchy}), we get:
+			  \[
+				\sum_{i = 1}^l v_i^2-v_i \leq r(r-1)(s-1)
+				\]
+			 \begin{align}
+				\Rightarrow\sum v_i^2
+				& \leq \sum v_i + r(r-1)(s-1)\\
+				\label{hello}
+				& = |E| + r(r-1)(s-1).
+			 \end{align}
+			 Consider
+			 \begin{align*}
+				(|E|-l)^2 
+				& = |E|^2 + l^2 - 2l|E| \\
+				& \leq l\cdot\lVert \bfv \rVert_2^2 + l^2 - 2l|E| \quad \text{from (\ref{cauchy})} \\
+				& \leq l|E| + lr(r-1)(s-1) + l^2 -2l|E| \quad \text{from (\ref{hello})} \\
+				& = l^2 - l|E| + lr^2(s-1) \\
+				& \leq lr^2(s-1) \quad \text{as |E|>l}.
+			 \end{align*}
+			 Hence we get our desired result $|E|\leq l + r\sqrt{(s-1)l}$.
+		\end{proof}
+       Let $\bfy\in\Sigma^n$ and $\bfc^1, \ldots, \bfc^L$ be all the distinct codewords in $\calc$ so that $\Delta(\bfy, \bfc^i) \leq n - \sqrt{n(n-d)} - 1$ for all $i\in[L]$. Define $G = ([n],[L],E)$ so that $(i,j)\in E$ iff $\bfy_i = (\bfc^j)_i$. Next we shall prove that $|E|\geq L + L\sqrt{n(n-d)}$. In the right vertex set, let $\deg(\bfc^j)$ denote the degree of the $j$-th right vertex. Observe that $|E|=\sum_j \deg(\bfc^j)$. Also $\deg(\bfc^j)$ denotes the number of places where $\bfc^j$ matches with $\bfy$, thus $\deg(\bfc^j) = n - \Delta(\bfc^j, \bfy)$. 
+       \begin{align*}
+       		|E|
+       		& = \sum_{j=1}^L \deg(\bfc^j)\\
+       		& = \sum_{j=1}^L n - \Delta(\bfc^j, \bfy)\\
+       		& \geq \sum_{j=1}^L n - (n-\sqrt{n(n-d)} - 1)\\
+       		& = L\cdot\left(1 + \sqrt{n(n-d)}\right).
+       \end{align*}
+       
+	Observe that if there was a $T\subseteq[n]$ with $|T| = n-d+1$ and a $|S|\subseteq[L]$ with $|S| =2$ so that $T\times S\subseteq E$, then there would be two codewords $\bfc^{s_1}$ and $\bfc^{s_2}$ so that they match in at least $n-d+1$ many places, then $\Delta(\bfc^{s_1}, \bfc^{s_2})\leq d-1$, which contradicts the fact that $\calc$ has disctance $d$. So $G$ is $K_{n-d+1, 2}$\emph{-free}. Now from Lemma~\ref{lem:bip_free}, $|E|\leq n + L\sqrt{n(n-d)}$. Hence 
+	\[
+		L\left(1 + \sqrt{n(n-d)}\right) \leq n + L\sqrt{n(n-d)}
+	\]
+	\[
+	\Rightarrow L \leq n.
+	\]
+	Hence $\calc$ is $(1 - \sqrt{1- d/n} - 1/n, n)$\emph{-list decodable}.
+	\end{proof}
 	
 	
 	Now a natural question is 
@@ -119,7 +194,7 @@
 		Is Johnson bound tight? Is it tight for linear codes?
 	\end{question}
 	
-	We shall see there are codes, even linear codes, with relative distance $\delta$ so that we can find Hamming ball of radius greater than $J_q(\delta)$ with super polynomial many codewords. But we shall also see that, in some sense, it is not tight.
+	We shall see there are codes, even linear codes, with relative distance $\delta$ so that we can find Hamming ball of radius greater than $J_q(\delta)$ with super polynomial many codewords. But we shall also see that, in some sense, it is not tight. 
 	
 	\subsection{List Decoding Capacity}
 	
@@ -209,6 +284,21 @@ We have
 Hence there exists $\bfy$ so that $|\calc\cap B(\bfy, \rho n)|\geq q^{\Omega(\epsilon n)}$.
 	\end{proof}
 	
+	Finally, we have shown that list decoding capacity is $1 - H_q(\rho)$. However the proof does not give us any explicit code that can achieve this capacity. Thus we must ask the following questions.
+	
+	\begin{question}{}{}
+				Do there exist explicit codes that achieve that achieve list decoding capacity?
+	\end{question}
+	\begin{question}{}{}
+		Can we achieve list decoding capacity with efficient list decoding algorithm?
+	\end{question} 
+	\begin{question}{}{}
+		Can we design an efficient algorithm that can achieve the Johnson Bound?
+	\end{question}
+	
 	
 \subsection{List Decoding from Random Errors}
+
+\subsection{Conclusion}
+We got a brief introduction to the notion of List Decoding and proved that it generalizes Unique Decoding and also some limitations of List Decoding. Although we didn't see any explicit codes and decoding algorithms, we proved there existence probabilistically and shall see those explicit examples in the coming sections through decoding of Reed-Solomon Codes.
 
