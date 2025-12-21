@@ -4,7 +4,9 @@
 \usepackage{fancyhdr}
 \usepackage{lastpage}
 \usepackage{titling}
+\usepackage{lipsum}
 \usepackage{bbm}
+%\usepackage{tocloft}
 \usepackage{setspace}
 %\setstretch{1.01}
 \usepackage{titlesec}
@@ -17,6 +19,7 @@
 \usepackage{graphicx}
 \usepackage{xcolor}
 %\titleformat{\section}{\sffamily}
+\pagenumbering{roman}
 \usepackage[
 colorlinks=true,
 linkcolor=blue,
@@ -24,42 +27,32 @@ citecolor=green,
 urlcolor=red
 ]{hyperref}
 \usepackage{enumerate}
-\pagestyle{fancy}
 \fancyhf{}
 \fancyhead[C]{\bfseries\textsf{List Decoding}}
-\fancyfoot[C]{\thepage/\pageref{LastPage}}
+\fancyfoot[C]{\thepage}
 
 \usepackage{tcolorbox}
 \tcbuselibrary{theorems,skins,hooks}
 %\newtcbtheorem[number within=section]{theorem}{Theorem}{}{theorem}
 
+
+\DeclareEmphSequence{\sffamily\upshape}
+
+
 %%%% TITLE %%%%%%
 \usepackage{titlesec}
 
 \titleformat{\section}
-{\sffamily\bfseries\Large}
+{\fontfamily{lmss}\bfseries\Large}
 {\thesection}{1em}{}
 
 \titleformat{\subsection}
-{\sffamily\bfseries\large}
+{\fontfamily{lmss}\bfseries\large}
 {\thesubsection}{1em}{}
 
 \titleformat{\subsubsection}
-{\sffamily\bfseries\normalsize}
+{\fontfamily{lmss}\bfseries\normalsize}
 {\thesubsubsection}{1em}{}
-
-\usepackage{titling}
-\pretitle{
-	\begin{center}
-	\ttfamily
-	\bfseries
-	\fontsize{28}{34}\selectfont}
-\posttitle{\end{center}\par}
-
-\title{\texttt{\Huge List Decoding}}
-\author{\texttt{\Large Sayan Kar}}
-%\author{Sayan Kar}
-\date{}
 
 \setcounter{tocdepth}{2}
 
@@ -118,6 +111,19 @@ urlcolor=red
 	attach title to upper,
 	fonttitle=\sffamily\bfseries\color{black},
 	after title=\quad}{prop}
+
+
+
+%%%%% ABSTRACT %%%%%%
+\renewenvironment{abstract}
+{
+	\begin{center}\fontfamily{lmss}\bfseries\large \S\hspace{0.05in}Abstract\hspace{0.05in}\S\end{center}
+	\normalsize}
+{\par}
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%
@@ -267,6 +273,9 @@ urlcolor=red
 \newcommand{\bfx}{\mathbf{x}}
 \newcommand{\bfy}{\mathbf{y}}
 \newcommand{\bfz}{\mathbf{z}}
+
+
+
 
 
 
