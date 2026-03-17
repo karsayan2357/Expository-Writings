@@ -1,0 +1,377 @@
+\documentclass{amsart}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{datetime}
+\usepackage{graphicx}
+\usepackage[
+colorlinks=true,
+linkcolor=blue,
+citecolor=magenta,
+urlcolor=red
+]{hyperref}
+%\usepackage{kpfonts, euler}
+\usepackage{url}
+\usepackage{newtxtext, mathpazo}
+\numberwithin{equation}{section}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\powerset}{\mathcal{P}}
+
+
+\title{M\"obius Inversion through \\ Partially Ordered Sets}
+\author{Sayan Kar}
+\date{Last updated: \today}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\section{M\"obius Function}
+
+\begin{definition}
+A \emph{partially ordered set} (or \emph{poset}) is a pair $(P,\preceq)$ where $P$ is a set and $\preceq$ is a binary relation on $P$ satisfying the following properties for all $x,y,z\in P$:
+\begin{enumerate}
+    \item \textbf{Reflexivity:} $x \preceq x$.
+    \item \textbf{Antisymmetry:} if $x \preceq y$ and $y \preceq x$, then $x=y$.
+    \item \textbf{Transitivity:} if $x \preceq y$ and $y \preceq z$, then $x \preceq z$.
+\end{enumerate}
+\end{definition}
+
+\begin{lemma}
+\label{topo_ordering}
+Suppose that $|P|=n$. Then we can label the elements of $P=\{p_1,p_2,\ldots,p_n\}$ so that
+\[
+p_i \preceq p_j \implies i \le j.\footnote{This type of ordering of a poset is called a \emph{topological ordering}.}
+\]
+\end{lemma}
+
+\begin{proof}
+We prove this by induction on $n$. The base case $n=1$ is trivial. Choose a maximal element of $P$ and label it $p_n$. Let $P' = P \setminus \{p_n\}.$ By the induction hypothesis, we can label $P'=\{p_1,p_2,\ldots,p_{n-1}\}$ so that
+\[
+p_i \preceq p_j \implies i \le j.
+\]
+Since $p_n$ is maximal, this labeling together with $p_n$ gives the required labeling of all of $P$.
+\end{proof}
+
+Let $(P,\preceq)$ be a finite partially ordered set. We define the function
+\[
+\zeta : P^2 \to \{0,1\}
+\]
+by
+\[
+\zeta(x,y)=
+\begin{cases}
+1 & \text{if } x \preceq y,\\
+0 & \text{otherwise}.
+\end{cases}
+\]
+
+\begin{definition}
+Let $P$ be a finite poset. Consider the matrix
+\[
+A_{\zeta} = [\zeta(x,y)]_{x,y\in P}.
+\]
+By Lemma~\ref{topo_ordering}, there is a topological ordering of $P$, the matrix $A_{\zeta}$ can an upper triangular matrix with all diagonal entries equal to $1$.
+Hence $A_{\zeta}$ is invertible. Its inverse is denoted
+\[
+A_{\mu} = [\mu(x,y)]_{x,y\in P}.
+\]
+The function $\mu : P^2 \to \mathbb{Z}$ is called the \emph{M\"obius function} of the poset $P$.
+\end{definition}
+
+Since $A_{\mu}A_{\zeta}=I$, we obtain
+\[
+\sum_{z\in P}\mu(x,z)\zeta(z,y)
+=
+\sum_{x\preceq z\preceq y}\mu(x,z)
+=
+\delta(x,y).
+\]
+
+\begin{theorem}
+
+Consider the two following cases:
+
+
+\begin{enumerate}
+\item[(a)] Let $P$ be the set of subsets of a finite set $X$, ordered by inclusion $\subseteq$. Then
+\[
+\mu(A,B)=
+\begin{cases}
+(-1)^{|B\setminus A|} & \text{if } A\subseteq B,\\
+0 & \text{otherwise}.
+\end{cases}
+\]
+
+\item[(b)] Let $P=[n]$ with the order defined by $a \preceq b$ if $a$ divides $b$. Then
+\[
+\mu(a,b)=
+\begin{cases}
+(-1)^r & \text{if } b/a \text{ is the product of } r \text{ distinct primes},\\
+0 & \text{otherwise}.
+\end{cases}
+\]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+We only need to verify the defining relation
+\[
+\sum_{x \preceq z \preceq y} \mu(x,z) =
+\begin{cases}
+1 & x=y,\\
+0 & x\ne y.
+\end{cases}
+\]
+
+\begin{enumerate}
+\item[(a)] If $A\subseteq B$, then
+\[
+\sum_{A\subseteq C\subseteq B} (-1)^{|C\setminus A|}
+= \sum_{k=0}^{|B\setminus A|} \binom{|B\setminus A|}{k} (-1)^k
+= (1-1)^{|B\setminus A|}.
+\]
+This equals $0$ unless $A=B$, in which case it equals $1$.
+
+\item[(b)] Suppose
+\[
+b/a = p_1^{k_1}p_2^{k_2}\cdots p_r^{k_r},
+\]
+where $p_1,p_2,\ldots,p_r$ are distinct primes and $k_1,k_2,\ldots,k_r \ge 1$.
+Then any $c$ satisfying $a\mid c\mid b$ corresponds to choosing a subset
+of the primes $\{p_1,\ldots,p_r\}$. Hence
+\[
+\sum_{a\mid c\mid b} \mu(c,b)
+= \sum_{S\subseteq [r]} (-1)^{|S|}
+=
+\begin{cases}
+1 & r=0,\\
+0 & r\ge 1.
+\end{cases}
+\]
+This verifies the required identity.
+\end{enumerate}
+\end{proof}
+
+\section{M\"obius Inversion}
+\begin{theorem}
+Let $(P,\preceq)$ be a finite poset and let $f,g,h : P \to \mathbb{R}$ be functions such that
+\begin{equation}
+g(x)=\sum_{a \preceq x} f(a), \qquad 
+h(x)=\sum_{b \succeq x} f(b).
+\end{equation}
+Then the function $f$ can be recovered from $g$ or $h$ via
+\begin{equation}
+f(x)=\sum_{a \preceq x}\mu(a,x)g(a), \qquad
+f(x)=\sum_{b \succeq x}\mu(x,b)h(b).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Since $P$ is finite, we may label its elements as $P=\{p_1,\dots,p_n\}$ in a way compatible with the partial order. Any function $f:P\to\mathbb{R}$ can then be identified with a column vector
+\[
+\mathbf{f} = (f(p_1),f(p_2),\ldots,f(p_n))^{T}.
+\]
+Similarly we associate vectors $\mathbf{g}$ and $\mathbf{h}$ to the functions $g$ and $h$.
+
+Let $A_{\zeta}=[\zeta(x,y)]$ be the matrix corresponding to the zeta function of the poset. The relation
+\[
+g(x)=\sum_{a\preceq x}f(a)
+\]
+means that each coordinate of $\mathbf{g}$ is obtained by summing the entries of $\mathbf{f}$ over elements below it in the order. In matrix form this is
+\[
+\mathbf{g}=A_{\zeta}^{T}\mathbf{f}.
+\]
+Likewise, the relation
+\[
+h(x)=\sum_{b\succeq x}f(b)
+\]
+corresponds to the matrix equation
+\[
+\mathbf{h}=A_{\zeta}\mathbf{f}.
+\]
+
+Since $A_{\zeta}$ is invertible and its inverse is $A_{\mu}$, we obtain
+\[
+\mathbf{f}=A_{\zeta}^{-T}\mathbf{g}=A_{\mu}^{T}\mathbf{g}
+\quad\text{and}\quad
+\mathbf{f}=A_{\zeta}^{-1}\mathbf{h}=A_{\mu}\mathbf{h}.
+\]
+Writing these matrix identities co-ordinatewise yields the stated inversion formulas.
+\end{proof}
+
+\section{Applications of M\"obius Inversion}
+\subsection{Inclusion--Exclusion Principle}
+
+M\"obius inversion gives a particularly elegant proof of the classical
+principle of inclusion--exclusion. Let $\{A_i\}_{i\in I}$ be a family of subsets of a finite set $X$.
+For $J\subseteq I$, define
+\[
+f(J)=\left|\left(\bigcap_{i\in J}A_i\right)\cap
+\left(\bigcap_{i\notin J}(X\setminus A_i)\right)\right|,
+\]
+that is, the number of elements that lie in exactly the sets indexed by $J$.
+Let
+\[
+h(J)=\left|\bigcap_{i\in J}A_i\right|.
+\]
+Then
+\[
+h(J)=\sum_{K\supseteq J} f(K).
+\]
+
+Applying M\"obius inversion on the poset $(\mathcal{P}(I),\subseteq)$, we obtain
+\[
+f(J)=\sum_{K\supseteq J}\mu(J,K)h(K)
+     =\sum_{K\supseteq J}(-1)^{|K|-|J|}h(K).
+\]
+
+Putting $J=\varnothing$ gives
+\[
+\left|\bigcap_{i\in I}(X\setminus A_i)\right|
+=
+\sum_{K\subseteq I}(-1)^{|K|}
+\left|\bigcap_{j\in K}A_j\right|.
+\]
+
+
+\subsection{Totient Function}
+
+M\"obius inversion gives another proof of the classical closed form
+for Euler's totient function. We briefly note that the divisibility relation on the natural numbers
+forms a partially ordered set. In this \emph{divisibility poset}, we write
+$a \preceq b$ if $a$ divides $b$. For a function $f:\mathbb{N}\to\mathbb{R}$,
+define
+\[
+g(n)=\sum_{d\mid n} f(d).
+\]
+M\"obius inversion on this poset gives
+\[
+f(n)=\sum_{d\mid n}\mu(d,n)g(d)
+   =\sum_{\substack{d\mid n\\ n/d\ \text{square free}}}
+     (-1)^{p(n/d)}\,g(d),
+\]
+where $p(m)$ denotes the number of distinct prime factors of $m$. For a natural number $n$, let $\varphi(n)$ denote the number of integers
+$m\le n$ such that $\gcd(m,n)=1$.
+
+\begin{lemma}
+\[
+n=\sum_{d\mid n}\varphi(d)=\sum_{d\mid n}\varphi(n/d).
+\]
+\end{lemma}
+
+\begin{proof}
+If $(m,n)=d$, then we can write $m=m_1d$ and $n=n_1d$ where
+$\gcd(m_1,n_1)=1$. Hence the number of such $m$ is the number
+of choices of $m_1$, which is $\varphi(n_1)=\varphi(n/d)$.
+\end{proof}
+
+Applying M\"obius inversion to this identity with $g(n)=n$
+and $f(n)=\varphi(n)$ gives
+\[
+\varphi(n)=\sum_{d\mid n}(-1)^{p(n/d)}d
+         =\sum_{d\mid n}(-1)^{p(d)}\frac{n}{d}.
+\]
+Factoring out $n$ we obtain
+\[
+\varphi(n)=n\sum_{d\mid n}\frac{(-1)^{p(d)}}{d}.
+\]
+
+If $n=p_1^{k_1}p_2^{k_2}\cdots p_r^{k_r}$ where
+$p_1,p_2,\ldots,p_r$ are distinct primes and $k_1,k_2,\ldots,k_r\ge1$,
+the multiplicative structure of the sum yields the familiar product form
+\[
+\varphi(n)=n\prod_{i=1}^{r}\left(1-\frac{1}{p_i}\right).
+\]
+
+
+\subsection{Colored Necklace Problem}
+
+M\"obius inversion also appears naturally in many counting problems.
+A classical example is the problem of counting colored necklaces.
+
+Suppose we have an infinite supply of beads of $\lambda$ colours and
+wish to form a necklace with $n$ beads. Any necklace can be represented
+by a sequence $(a_1,\ldots,a_n)$, where we identify sequences that differ
+by a cyclic permutation, since they represent the same necklace.
+
+We say that a necklace of length $n$ is \emph{primitive} if it is not
+obtained by repeating a shorter necklace. More precisely, if $d\mid n$,
+a necklace is said to have period $d$ if it is obtained by repeating
+$n/d$ times a primitive necklace of length $d$.
+
+First note that the number of sequences of length $n$ is $\lambda^n$.
+Every such sequence arises from a primitive necklace of some period
+$d$ dividing $n$. If $M(d)$ denotes the number of primitive necklaces
+of length $d$, then each such necklace gives rise to $d$ distinct
+sequences depending on the choice of the starting position. Hence
+\[
+\lambda^n=\sum_{d\mid n} d\,M(d).
+\]
+
+Applying M\"obius inversion to this identity gives
+\[
+M(n)=\frac{1}{n}\sum_{d\mid n}\mu(d)\lambda^{n/d}.
+\]
+
+The total number of necklaces of length $n$ is therefore
+\[
+N_n=\sum_{d\mid n} M(d).
+\]
+
+Substituting the expression for $M(d)$, we obtain
+\[
+N_n=\sum_{d\mid n}\sum_{\ell\mid d}\frac{1}{d}\mu(\ell,d)\lambda^{\ell}.
+\]
+Writing $d=k\ell$ and rearranging the sums gives
+\[
+N_n=\sum_{\ell\mid n}\frac{\lambda^{\ell}}{\ell}
+\sum_{k\mid n/\ell}\frac{\mu(1,k)}{k}.
+\]
+
+Using the identity
+\[
+\sum_{k\mid m}\frac{\mu(1,k)}{k}=\frac{\varphi(m)}{m},
+\]
+we finally obtain the well-known formula
+\[
+N_n=\frac{1}{n}\sum_{d\mid n}\varphi(n/d)\lambda^{d}.
+\]
+
+Thus the number of necklaces of length $n$ formed from $\lambda$
+colours is
+\[
+N_n=\frac{1}{n}\sum_{d\mid n}\varphi(n/d)\lambda^{d}.
+\]
+
+
+
+\begin{thebibliography}{9}
+
+\bibitem{posetslides}
+A. Frieze,
+\textit{Posets},
+Combinatorics Lecture Slides, Carnegie Mellon University.
+Available at: \url{https://www.math.cmu.edu/~af1p/Teaching/Combinatorics/Slides/Posets.pdf}
+
+\bibitem{murty_combinatorics}
+S. M. Cioab\u{a} and M. Ram Murty,
+\textit{A First Course in Graph Theory and Combinatorics},
+Springer / Hindustan Book Agency, 2009.
+
+\end{thebibliography}
+
+\end{document}
