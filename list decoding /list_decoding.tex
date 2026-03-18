@@ -1,8 +1,8 @@
-\section{List Decoding}
+\chapter{List Decoding}
 
-\subsection{Introduction}
+\section{Introduction}
 	First we define what is a list decodable codes.
-	\begin{definition}{}{}
+	\begin{definition}[]
 		Given $0 \leq \rho <1$ and $L\geq1$, a code $\calc$ of block length $n$ over the alphabet $\Sigma$ is said to be $(\rho, L)$\emph{-list decodable} if for all $\bfy\in\Sigma^n$,
 		\[
 		\#\{\bfc\in\calc | \Delta(\bfy,\bfc)\leq\rho n\} \leq L.
@@ -10,36 +10,33 @@
 	\end{definition}	
 	Here this $\rho$ parameter is called \emph{fraction of error} and $L$ is called the \emph{list size upper bound}. Observe that, if fraction of error is atmost $\rho$, then the required codeword would be in the list. Also if $\calc$ is $(\rho, L)$-list decodable, then the decoding algortithm outputs atmost $L$ many codewords as outputs.
 	
-	\subsubsection*{Choice of $L$}
 	Note that the case of $L=1$ is precisely the scenario of unique decoding, so it would be better to cosider $L>1$. Also the case $L=|\Sigma|^n$ make the notion of list decoding trivial. So we need to be careful about the choice of $L$.
 	
 	One way to restrict $L$ is to set to be an arbitrarily large constant. Now we can ask the following question.
 	
-	\begin{question}{}{}
+	\begin{question}[]
 		What is the limit of $\rho$ as $L\to\infty$ such that all sufficiently long codes $\calc\in\mathfrak{C}$ are $(\rho, L)$-list decodable ?
 	\end{question}
 	We refer to this as the list-decodability of $\mathfrak{C}$ with constant-sized lists. We can also see at a weker limit keeping our algorithmic goal in consideration. For an efficient algorithm, $L$ has to be a polynomial in $n$, as otherwise the output size would be super polynomial, giving us an algorithm not having a polynomial running time. This is the list decodability of $\mathfrak{C}$ with polynomial sized lists. For most of the natural codes, the above two notions are the same. For the rest of our discussion we shall only be interested in list decodability with polynomial sized lists.
 	
-	\subsubsection*{Utility of List Decoding}
 	One of the most useful gain of List Decoding over Unique Decoding is that it generalizes Unique Decoding, as when number of errors is at most half the distance, the list size would be at most one. We shall also see in this section later that for random codes, for most of the error patterns, the list size is at most one with high probability.
 	
-	\subsubsection*{Limitations of List Decoding}
+	\subsection*{Limitations of List Decoding}
 	Since List decoding is a further generalization of Unique Decoding, it is natural to ask the followig two questions, which we shall answer later in this section.
-	\begin{question}{}{first}
-%		\label{first}
+	\begin{question}[]
+		\label{first}
 		Given a code of relative distance $\delta$, can we correct more than $\frac{\delta}{2}$ fraction of errors using list decoding?		
 	\end{question}
 	
-	\begin{question}{}{}
+	\begin{question}[]
 		Given a code of rate $R$, what is the maximum fraction of errors correctable using list decoding?
 	\end{question}
-	
 	%% writing left %%%%
 	
 	
-	\subsection{Johnson Bound}
-	\begin{theorem}{Johnson Bound.}{johnson}
-%		\label{johnson}
+	\section{Johnson Bound}
+	\begin{theorem}[]
+		\label{johnson}
 		If $\calc\subseteq[q]^n$ is a code of distance $d$ and $\rho<J_q(\frac{d}{n})$, then $\calc$ is $(\rho, qnd)$-list decodable, where the function $J_q(\delta)$ is defined as 
 		\[
 		J_q(\delta) = \left( 1 - \frac{1}{q}\right)\left(1 - \sqrt{1-\frac{q\delta}{q-1}}\right).
@@ -96,10 +93,10 @@
 		
 	\end{proof}
 	
-	This alone does not answer the Question~\ref{qsn:first}. Theorem~\ref{th:johnson} along with Lemma~\ref{lem:J_function_bound} gives us an affirmative answer to the Question~\ref{qsn:first}.
+	This alone does not answer the Question~\ref{first}. Theorem~\ref{johnson} along with Lemma~\ref{J_function_bound} gives us an affirmative answer to the Question~\ref{first}.
 	
-	\begin{lemma}{}{J_function_bound}
-%		\label{J_function_bound}
+	\begin{lemma}[]
+		\label{J_function_bound}
 		Let $q\geq 2$ be an integer and $0\leq x\leq 1-\frac{1}{q}$, then the following inequality holds.
 		\[
 		J_q(x) \geq 1 - \sqrt{1-x} \geq \frac{x}{2}.
@@ -115,16 +112,17 @@
 		So the function is increasing and $f(0) = 0$, so we get our forst inequality. The second inequality is immediate from the inequality $(1-\frac{x}{2})^2\geq 1-x$.
 	\end{proof}
 	
-	Theorem~\ref{th:johnson} and Lemma~\ref{lem:J_function_bound} imply that for a code of relative distance $\delta>0$, we correct strictly larger fraction of errors than unique decoding in ploynomial time as long as $q$ is at most some polynomial in $n$. These two propositions together also implies an \emph{alphabet free} version of the Johnson Bound.
+	Theorem~\ref{johnson} and Lemma~\ref{J_function_bound} imply that for a code of relative distance $\delta>0$, we correct strictly larger fraction of errors than unique decoding in ploynomial time as long as $q$ is at most some polynomial in $n$. These two propositions together also implies an \emph{alphabet free} version of the Johnson Bound.
 	
-	\begin{theorem}{Alphabet-Free Johnson Bound.}{}
+	\begin{theorem}[Alphabet-Free Johnson Bound.]
 		For any $q$-ary code $\calc$ of block length $n$ and distance $d$, if $e\leq n - \sqrt{n(n - d)}$, then $\calc$ is $(e/n, qnd)$-list decodable.
 	\end{theorem}
 	\emph{Here I present a Graph Theoretic proof for this theorem with a better list size.}
 	\begin{proof}
 		First we prove the following lemma. 	Let $G = (L,R,E)$ be a bipartite graph with $|L| = l$ and $|R| = r\geq 2$. For any $s\leq l$, we say $G$ is $K_{s,2}$\emph{-free} if there is no subset $L'\subseteq L$ and $R'\subseteq R$ with $|L'| = s$ and $|R'| = 2$ such that $L'\times R'\subseteq E$.
 		
-		\begin{lemma}{}{bip_free}
+		\begin{lemma}[]
+			\label{bip_free}
 		 If $G$ is $K_{s,2}$\emph{-free}, then $|E| \leq l + r\sqrt{l(s-1)}$.
 		\end{lemma}
 		\begin{proof}
@@ -178,7 +176,7 @@
        		& = L\cdot\left(1 + \sqrt{n(n-d)}\right).
        \end{align*}
        
-	Observe that if there was a $T\subseteq[n]$ with $|T| = n-d+1$ and a $|S|\subseteq[L]$ with $|S| =2$ so that $T\times S\subseteq E$, then there would be two codewords $\bfc^{s_1}$ and $\bfc^{s_2}$ so that they match in at least $n-d+1$ many places, then $\Delta(\bfc^{s_1}, \bfc^{s_2})\leq d-1$, which contradicts the fact that $\calc$ has disctance $d$. So $G$ is $K_{n-d+1, 2}$\emph{-free}. Now from Lemma~\ref{lem:bip_free}, $|E|\leq n + L\sqrt{n(n-d)}$. Hence 
+	Observe that if there was a $T\subseteq[n]$ with $|T| = n-d+1$ and a $|S|\subseteq[L]$ with $|S| =2$ so that $T\times S\subseteq E$, then there would be two codewords $\bfc^{s_1}$ and $\bfc^{s_2}$ so that they match in at least $n-d+1$ many places, then $\Delta(\bfc^{s_1}, \bfc^{s_2})\leq d-1$, which contradicts the fact that $\calc$ has disctance $d$. So $G$ is $K_{n-d+1, 2}$\emph{-free}. Now from Lemma~\ref{bip_free}, $|E|\leq n + L\sqrt{n(n-d)}$. Hence 
 	\[
 		L\left(1 + \sqrt{n(n-d)}\right) \leq n + L\sqrt{n(n-d)}
 	\]
@@ -190,16 +188,16 @@
 	
 	
 	Now a natural question is 
-	\begin{question}{}{}
+	\begin{question}
 		Is Johnson bound tight? Is it tight for linear codes?
 	\end{question}
 	
 	We shall see there are codes, even linear codes, with relative distance $\delta$ so that we can find Hamming ball of radius greater than $J_q(\delta)$ with super polynomial many codewords. But we shall also see that, in some sense, it is not tight. 
 	
-	\subsection{List Decoding Capacity}
+	\section{List Decoding Capacity}
 	
-	\begin{theorem}{}{ld_capacity}
-%		\label{ld_capacity}
+	\begin{theorem}[]
+		\label{ld_capacity}
 		For $q\geq2, 0\leq \rho < 1 - \frac{1}{q}$ and $\varepsilon>0$ small enough, there exist codes of block length $n$ large enough so that 
 		\begin{enumerate}[1.]
 			\item If $R\leq 1 - H_q(\rho) - \varepsilon$, then there is a $(\rho, O(\frac{1}{\varepsilon}))$-list decodable code.
@@ -209,8 +207,8 @@
 	
 	Hence \emph{capacity of list decoding} is $1 - H_q(\rho)$. This is the exact capacity of a $qSC_{\rho}$ channel. Hence list decoding is the bridge between Hamming and Shannon.
 	
-	\subsubsection{Proof of Theorem~\ref{th:ld_capacity}}
-	Rather than proving Theorem~\ref{th:ld_capacity} directly we prove the following  stronger theorem. In fact, we shall show that a random code is $(\rho, L)$-list decodable with high probability as long as 
+	\subsection*{Proof of Theorem~\ref{ld_capacity}}
+	Rather than proving Theorem~\ref{ld_capacity} directly we prove the following  stronger theorem. In fact, we shall show that a random code is $(\rho, L)$-list decodable with high probability as long as 
 	\[
 	1 - H_q(\rho) - \frac{1}{L}.
 	\]
@@ -219,86 +217,87 @@
 	\Delta(\mathbf{C(m_i)}, \mathbf{y}) \leq \rho n \quad \text{for all $i\in \{0,\ldots,L\}$}.
 	\]
 	
-	\begin{theorem}{List-Decoding Capacity.}{}
+	\begin{theorem}[List-Decoding Capacity]
 		Let $q\geq2$ be an integer, $0<\rho<1-\frac{1}{q}$ and $\varepsilon>0$.
 		\begin{enumerate}[1.]
 			\item Let $L\in\mathbb{N}$, then there exists a $(\rho, L)$-list decodable code with rate 
 			\[
 			R \leq 1 - H_q(\rho) - \frac{1}{L}.
-			\]
-			\item For all $(\rho, L)$-list decodable code with rate $R\geq 1 - H_q(\rho) + \varepsilon$, it is necesary that $L\geq q^{\Omega(\varepsilon n)}$.
+			\] \label{1}
+			\item For all $(\rho, L)$-list decodable code with rate $R\geq 1 - H_q(\rho) + \varepsilon$, it is necesary that $L\geq q^{\Omega(\varepsilon n)}$.\label{2}
 		\end{enumerate}
 	\end{theorem}
 	\begin{proof}
 		The following proof is done by Probabilistic Methods. 
 		
-		\vspace{0.01in}
+		\noindent\textit{Proof of \ref{1}.}
+			Given a received word $\mathbf{y}\in[q]^n$, and $\mathbf{m_0}, \ldots, \mathbf{m_L}\in[q]^k$, the tuple $(\mathbf{y}, \mathbf{m_0}, \ldots, \mathbf{m_L})$ defines a \emph{bad event} if 
+			\[
+			C(\mathbf{m_i})\in B(\mathbf{y}, \rho n) \quad \text{for all $i\in\{0,\ldots,L\}$}.
+			\]
+			Note that $\calc$ is $(\rho, L)$-list decodable if there is no \emph{bad event}. 
+			
+			Fix $\mathbf{y}\in[q]^n$, and $\mathbf{m_0}, \ldots, \mathbf{m_L}\in[q]^k$. Note that for fixed $i$, by the choice of $\calc$, we have
+			\[
+			\Pr[C(\mathbf{m_i}) \in B(\mathbf{y}, \rho n)] = \frac{Vol_q(\rho n, n)}{q^n} \leq q^{-n(1 - H_q(\rho))}. 
+			\]
+			The probability of the \emph{bad event} by $(\mathbf{y}, \mathbf{m_0}, \ldots, \mathbf{m_L})$ is 
+			\begin{align*}
+				\Pr\left[\bigwedge_{i = 0}^L C(\mathbf{m_i})\in B(\mathbf{y}, \rho n)\right]  
+				& =  \prod_{i = 0}^L \Pr[C(\mathbf{m_i})\in B(\mathbf{y}, \rho n)] \quad \text{[Indepence of $C(\mathbf{m_i})$'s]} \\
+				& \leq q^{-n(L+1)(1 - H_q(\rho))}.
+			\end{align*}
+			
+			Now we need to have no \emph{bad events} for $\calc$ in order to have it $(\rho, L)$-list decodable.
+			\begin{align*}
+				\Pr[\text{There is no bad event}]
+				& \leq q^n\binom{q^k}{L+1}q^{-n(L+1)(1 - H_q(\rho))} \\
+				& \leq q^n q^{k(L+1)} q^{-n(L+1)(1 - H_q(\rho))} \quad \text{[$\because \binom{n}{k} \leq n^k$]}\\ 
+				& = q^{-n(L+1)[1 - H_q(\rho) - \frac{1}{L+1} - R]} \quad [R = kn] \\
+				& \leq q^{-n(L+1)[1 - H_q(\rho) -\frac{1}{L+1} -1 + H_q(\rho) + \frac{1}{L}]} \\
+				& = q^{-\frac{n}{L}} \\
+				& < 1.
+			\end{align*}
+			The first inequality is apparent from going through all the received words and messages possible and using the union bound. Thus, by probabilistic method, there exists a code $\calc$ which is $(\rho, L)$-list decodable. Also the arguement tells us that probability of a random code not being $(\rho, L)$-list decodable goes to 0 as $n\to\infty$.
 		
-\noindent \textsf{(Proof of $\mathsf{1}$).} Given a received word $\mathbf{y}\in[q]^n$, and $\mathbf{m_0}, \ldots, \mathbf{m_L}\in[q]^k$, the tuple $(\mathbf{y}, \mathbf{m_0}, \ldots, \mathbf{m_L})$ defines a \emph{bad event} if 
-		\[
-		C(\mathbf{m_i})\in B(\mathbf{y}, \rho n) \quad \text{for all $i\in\{0,\ldots,L\}$}.
-		\]
-		Note that $\calc$ is $(\rho, L)$-list decodable if there is no \emph{bad event}. 
-		
-		Fix $\mathbf{y}\in[q]^n$, and $\mathbf{m_0}, \ldots, \mathbf{m_L}\in[q]^k$. Note that for fixed $i$, by the choice of $\calc$, we have
-		\[
-		\Pr[C(\mathbf{m_i}) \in B(\mathbf{y}, \rho n)] = \frac{Vol_q(\rho n, n)}{q^n} \leq q^{-n(1 - H_q(\rho))}. 
-		\]
-		The probability of the \emph{bad event} by $(\mathbf{y}, \mathbf{m_0}, \ldots, \mathbf{m_L})$ is 
+	\noindent\textit{Proof of \ref{2}}
+		 We need to show that there exists $\bfy\in[q]^n$ so that $|C\cap B(\bfy,\rho n)|$ is exponentially large for every $\calc$ of rate $R\geq1-H_q(p)+\varepsilon$. Pick $\bfy\in[q]^n$ uniformly at random and fix a $\bfc\in\calc$. Then
 		\begin{align*}
-			\Pr\left[\bigwedge_{i = 0}^L C(\mathbf{m_i})\in B(\mathbf{y}, \rho n)\right]  
-			& =  \prod_{i = 0}^L \Pr[C(\mathbf{m_i})\in B(\mathbf{y}, \rho n)] \quad \text{[Indepence of $C(\mathbf{m_i})$'s]} \\
-			& \leq q^{-n(L+1)(1 - H_q(\rho))}.
+			\Pr[\bfc\in B(\bfy,\rho n)] 
+			& = \Pr[\bfy\in B(\bfy, \rho n)]\\
+			& = \frac{Vol_q(\rho n,n)}{q^n} \quad \text{[as $\mathbf{y}$ is uniformly random]}\\
+			& \geq q^{-n(1-H_q(\rho)) - o(n)}.\\
 		\end{align*}
 		
-		Now we need to have no \emph{bad events} for $\calc$ in order to have it $(\rho, L)$-list decodable.
+		We have 
 		\begin{align*}
-			\Pr[\text{There is no bad event}]
-			& \leq q^n\binom{q^k}{L+1}q^{-n(L+1)(1 - H_q(\rho))} \\
-			& \leq q^n q^{k(L+1)} q^{-n(L+1)(1 - H_q(\rho))} \quad \text{[$\because \binom{n}{k} \leq n^k$]}\\ 
-			& = q^{-n(L+1)[1 - H_q(\rho) - \frac{1}{L+1} - R]} \quad [R = kn] \\
-			& \leq q^{-n(L+1)[1 - H_q(\rho) -\frac{1}{L+1} -1 + H_q(\rho) + \frac{1}{L}]} \\
-			& = q^{-\frac{n}{L}} \\
-			& < 1.
+			\bbe[|\calc\cap B(\bfy, \rho n)|] 
+			& = \sum_{c\in\calc}\bbe[\mathbbm{1}_{\bfc\in B(\bfy,\rho n)}]\\
+			& = \sum_{c\in\calc}\Pr[\bfc\in B(\bfy,\rho n)] \\
+			& \geq |\calc| \cdot q^{-n(1-H_q(\rho)) - o(n)}\\
+			& = q^{n[R-1+H_q(\rho) - o(1)]}\\
+			& \geq q^{n(\varepsilon -  o(1))}\\
+			& \geq q^{\Omega(\varepsilon n)}.
 		\end{align*}
-		The first inequality is apparent from going through all the received words and messages possible and using the union bound. Thus, by probabilistic method, there exists a code $\calc$ which is $(\rho, L)$-list decodable. Also the arguement tells us that probability of a random code not being $(\rho, L)$-list decodable goes to 0 as $n\to\infty$. \newline
-		
-	\noindent \textsf{(Proof of $\mathsf{2}$).} We need to show that there exists $\bfy\in[q]^n$ so that $|C\cap B(\bfy,\rho n)|$ is exponentially large for every $\calc$ of rate $R\geq1-H_q(p)+\varepsilon$. Pick $\bfy\in[q]^n$ uniformly at random and fix a $\bfc\in\calc$. Then
-	\begin{align*}
-	\Pr[\bfc\in B(\bfy,\rho n)] 
-	& = \Pr[\bfy\in B(\bfy, \rho n)]\\
-	& = \frac{Vol_q(\rho n,n)}{q^n} \quad \text{[as $\mathbf{y}$ is uniformly random]}\\
-	& \geq q^{-n(1-H_q(\rho)) - o(n)}.\\
-	\end{align*}
-	
-We have 
-\begin{align*}
-	\bbe[|\calc\cap B(\bfy, \rho n)|] 
-	& = \sum_{c\in\calc}\bbe[\mathbbm{1}_{\bfc\in B(\bfy,\rho n)}]\\
-	& = \sum_{c\in\calc}\Pr[\bfc\in B(\bfy,\rho n)] \\
-	& \geq |\calc| \cdot q^{-n(1-H_q(\rho)) - o(n)}\\
-	& = q^{n[R-1+H_q(\rho) - o(1)]}\\
-	& \geq q^{n(\varepsilon -  o(1))}\\
-	& \geq q^{\Omega(\varepsilon n)}.
-\end{align*}
-Hence there exists $\bfy$ so that $|\calc\cap B(\bfy, \rho n)|\geq q^{\Omega(\epsilon n)}$.
+		Hence there exists $\bfy$ so that $|\calc\cap B(\bfy, \rho n)|\geq q^{\Omega(\epsilon n)}$.
 	\end{proof}
 	
 	Finally, we have shown that list decoding capacity is $1 - H_q(\rho)$. However the proof does not give us any explicit code that can achieve this capacity. Thus we must ask the following questions.
 	
-	\begin{question}{}{}
+	\begin{question}[]
 				Do there exist explicit codes that achieve that achieve list decoding capacity?
 	\end{question}
-	\begin{question}{}{}
+	\begin{question}[]
 		Can we achieve list decoding capacity with efficient list decoding algorithm?
 	\end{question} 
-	\begin{question}{}{}
+	\begin{question}[]
+		\label{main}
 		Can we design an efficient algorithm that can achieve the Johnson Bound?
 	\end{question}
 	
 	
-\subsection{List Decoding from Random Errors}
+\section{List Decoding from Random Errors}
 
-\subsection{Conclusion}
+\section{Conclusion}
 We got a brief introduction to the notion of List Decoding and proved that it generalizes Unique Decoding and also some limitations of List Decoding. Although we didn't see any explicit codes and decoding algorithms, we proved there existence probabilistically and shall see those explicit examples in the coming sections through decoding of Reed-Solomon Codes.
 
