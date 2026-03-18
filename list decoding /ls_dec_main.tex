@@ -1,18 +1,20 @@
 \include{preamble}
 \begin{document}
 	
+	\large
+	
 	\pagestyle{empty}
 	\include{titlepage}
 	
-		\vspace*{\fill}
-		\begin{abstract}
-			
-		\noindent In the Hamming setup, we have seen that any code $\calc$ over the alphabet $\Sigma$ with distance $d$ can correct upto $\lfloor\frac{d-1}{2}\rfloor$ errors. The main goal of list decoding is to get past this bound. We shall also see that list decoding is, to an extent, the bridge between Hamming and Shannon through its capacity.
-
-			\vspace*{\fill}
-
-		%% writing left %%% 
-	\end{abstract}
+%		\vspace*{\fill}
+%		\begin{abstract}
+%			
+%		\noindent In the Hamming setup, we have seen that any code $\calc$ over the alphabet $\Sigma$ with distance $d$ can correct upto $\lfloor(d-1)/2\rfloor$ errors. The main goal of list decoding is to get past this bound. We shall also see that list decoding is, to an extent, the bridge between Hamming and Shannon through its capacity. \cite{GRS24}
+%
+%			\vspace*{\fill}
+%
+%		%% writing left %%% 
+%	\end{abstract}
 	
 	\newpage
 	
@@ -21,24 +23,29 @@
 	\newpage
 	
 	\section*{Notations}
+	
 	\addcontentsline{toc}{section}{\large Notations}
 	
-	\noindent We denote a finite set of symbols, called an \emph{alphabet}, by $\Sigma$. A code $\calc$ of block length $n$ over the alphabet $\Sigma$ is just a subset of $\Sigma^n$.
-	\vspace{0.1in}
+	\begin{itemize}
+		\item We denote a finite set of symbols, called an \emph{alphabet}, by $\Sigma$. A code $\calc$ of block length $n$ over the alphabet $\Sigma$ is just a subset of $\Sigma^n$.
+		
+		\item For $n\in\mathbb{N} := \{1,2,\ldots\}$, we define $[n]$ to be the set $\{1,2,\ldots,n\}$.
+		
+		\item  We denote the $q$-entropy function by $H_q(\rho) := \rho \log_q(q-1) - plog_qp - (1-p)log_q(1-p)$.
+		
+		\item  Let $q$ be a prime power. Then $\mathbb{F}_q$ denotes the finite field of order $q$.
+		
+		\item We denote the Hamming distance by $\Delta(\bfx,\bfy) := \#\{i\in[n] | x_i \neq y_i\}$ for $\bfx, \bfy\in\Sigma^n$, and the Hamming Ball by $B(\bfy,e):=\{x\in\Sigma^n | \Delta(\bfx,\bfy)\leq e\}$.
+		
+		\item For a bivariate polynomial $Q(X,Y)$, the maximum degree of $X$ in any monomial of $Q(X,Y)$ is denoted by $\deg_X(Q)$ and similarly for $Y$, we have $\deg_Y(Q)$.
+		
+		\vfill
+		
+		
+	\end{itemize}
 	
-	\noindent For $n\in\mathbb{N} := \{1,2,\ldots\}$, we define $[n]$ to be the set $\{1,2,\ldots,n\}$.
-	\vspace{0.1in}
 	
-	\noindent We denote the $q$-entropy function by $H_q(\rho) := \rho \log_q(q-1) - plog_qp - (1-p)log_q(1-p)$.
-	\vspace{0.1in}
-	
-	\noindent Let $q$ be a prime power. Then $\mathbb{F}_q$ denotes the finite field of order $q$.
-	\vspace{0.1in}
-	
-	\noindent We denote the Hamming distance by $\Delta(\bfx,\bfy) := \#\{i\in[n] | x_i \neq y_i\}$ for $\bfx, \bfy\in\Sigma^n$, and the Hamming Ball by $B(\bfy,e):=\{x\in\Sigma^n | \Delta(\bfx,\bfy)\leq e\}$.
-	
-	
-	\newpage
+	\pagebreak
 	
 	\pagestyle{fancy}
 	
@@ -52,12 +59,29 @@
 	
 	\include{rs_decode}
 	
+	\newpage
 	
+	\include{frs_code}
+	
+	\thispagestyle{empty}
 	\begin{thebibliography}{}
 		
-		\bibitem{guruswami}
-		V.~Guruswami, A.~Rudra, and M.~Sudan, \textsf{Essential Coding Theory}, 
+		\bibitem[GRS24]{GRS24}
+		V.~Guruswami, A.~Rudra, and M.~Sudan, \href{https://cse.buffalo.edu/faculty/atri/courses/coding-theory/book/}{\emph{Essential Coding Theory}}, 
 		Graduate Studies in Mathematics, vol.~226, American Mathematical Society, 2024.
+		
+		\bibitem[Sud25]{Sud25}
+		M.~Sudan,
+			\emph{Algebra in Algorithmic Coding Theory},
+		\href{https://arxiv.org/pdf/2512.06478}{	arXiv:2512.06478}, 2025.
+		
+		\bibitem[GS99]{GS99}
+		V.~Guruswami and M.~Sudan,
+		Improved decoding of Reed--Solomon and algebraic--geometric codes,
+		\textit{IEEE Trans.\ Inform.\ Theory} \textbf{45} (1999), no.~6, 1757--1767.
+		Preliminary version in \textit{Proc.\ FOCS 1998}.
+		\href{https://doi.org/10.1109/18.782097}{doi:10.1109/18.782097}.
+		
 	\end{thebibliography}
 	
 \end{document}
