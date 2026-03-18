@@ -1,0 +1,228 @@
+\documentclass{amsart}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{lipsum}
+\usepackage{amsfonts, amsmath, amssymb, amsthm}
+\title{Graphs and Matrices}
+\usepackage{xcolor}
+\usepackage[
+colorlinks=true,
+linkcolor=blue, 
+citecolor=magenta,
+urlcolor=red
+]{hyperref}
+\usepackage[sc]{mathpazo}
+\usepackage[T1]{fontenc}
+\author{Sayan Kar}
+\date{March 2026}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{proposition}{Proposition}[section]
+\begin{document}
+
+\maketitle
+\tableofcontents 
+
+\begin{abstract}
+    This is a very brief note on \textbf{Spectral Graph Theory}.
+\end{abstract}
+
+\section{Adjacency Matrices}
+
+Given a graph, one can associate various matrices to encode its information. 
+The \emph{adjacency matrix} $A$ of a graph $X = (V, E)$ is the matrix whose rows and columns 
+are indexed by the vertices of $X$, where $A(x, y)$ equals the number of edges between 
+$x$ and $y$. When necessary to indicate the dependence on $X$, we denote $A$ by $A(X)$.
+
+A number $\lambda$ is called an \emph{eigenvalue} of $A$ if there exists a non-zero vector 
+$u \in \mathbb{R}^n$ such that $ Au = \lambda u$. This means that $\lambda$ is a root of the \emph{characteristic polynomial} $\det(t I_n - A)$.
+
+If $n$ denotes the number of vertices of $X$, then $A$ is an $n \times n$ real and 
+symmetric matrix, and therefore by linear algebra, it has $n$ real eigenvalues, which we 
+denote as follows: $\lambda_1 \ge \cdots \ge \lambda_n$.
+
+The \emph{spectrum} of $X$ consists of its eigenvalues, including multiplicities.
+
+\begin{theorem}
+\label{clowalk}
+Let $X = (V, E)$ be a graph without loops, with adjacency matrix $A$. 
+For any $x, y \in V$ and any natural number $k$, the entry $A^k(x, y)$ 
+equals the number of $(x, y)$-walks of length $k$.
+\end{theorem}
+
+\begin{proof}
+Denote by $w_k(x, y)$ the number of $(x, y)$-walks of length $k$. 
+We will show that $A^k(x, y) = w_k(x, y)$ for any $x, y \in V$ and any 
+natural number $k$ using induction on $k$.
+
+The base case $k = 1$ is clear from the definition of $A$. Let $k \ge 2$ and assume that $A^{k-1}(x, y) = w_{k-1}(x, y)$ for any 
+$x, y \in V$. Let $x$ and $y$ be two vertices of $X$. A $(x, y)$-walk 
+of length $k$ is composed of a $(x, z)$-walk of length $k-1$ followed 
+by an edge $zy$. Hence,
+\[
+w_k(x, y) = \sum_{z : z \sim y} w_{k-1}(x, z).
+\]
+
+At the same time,
+\[
+A^k(x, y) = \sum_{z \in V} A^{k-1}(x, z) A(z, y) 
+= \sum_{z : z \sim y} A^{k-1}(x, z).
+\]
+
+From the induction hypothesis, we know that 
+$A^{k-1}(x, z) = w_{k-1}(x, z)$ for each $z \sim y$. 
+Using the above two equations, we get that 
+\[
+A^k(x, y) = w_k(x, y).
+\]
+\end{proof}
+
+Now the above thereom gives the next Corollary~\ref{clowalk} directly.
+
+\begin{corollary}
+Let $X = (V, E)$ be a graph with adjacency matrix $A$ whose eigenvalues are 
+$\lambda_1 \ge \cdots \ge \lambda_n$. For any natural number $k$, the number 
+of closed walks of length $k$ in $X$ equals $\sum_{j=1}^{n} \lambda_j^k$.
+\end{corollary}
+
+Now we shall see a very interesting upper bound on the eigenvalues of a simple graph through the following proposition.
+
+
+\begin{proposition}
+Let $X$ be a simple graph with $n$ vertices and $e$ edges. If $\lambda$ 
+is an eigenvalue of the adjacency matrix $A$ of $X$, then
+\[
+|\lambda| \le \sqrt{2e\left(1-\frac{1}{n}\right)}.
+\]
+\end{proposition}
+
+\begin{proof}
+We use the facts that $\operatorname{tr}(A) = 0$ and $\operatorname{tr}(A^2) = 2e$. 
+Since $A$ is real symmetric, all its eigenvalues are real. Let the eigenvalues of $A$ be $\lambda_1, \dots, \lambda_n$, and let $\lambda$ 
+be one of them. The desired inequality is equivalent to
+\[
+\lambda^2 \le \frac{2e(n-1)}{n}
+\;\;\Longleftrightarrow\;\;
+\frac{n}{n-1}\lambda^2 \le \operatorname{tr}(A^2)
+= \sum_{i=1}^n \lambda_i^2.
+\]
+
+Rewriting, this is equivalent to
+\[
+\sum_{i \ne k} \lambda_i^2 \ge \frac{1}{n-1}\lambda^2,
+\]
+where $\lambda = \lambda_k$. Now, since $\operatorname{tr}(A) = 0$, we have, $\sum_{i \ne k} \lambda_i = -\lambda$. Applying the Cauchy--Schwarz inequality,
+\[
+\sum_{i \ne k} \lambda_i^2 
+\ge \frac{1}{n-1} \left( \sum_{i \ne k} \lambda_i \right)^2
+= \frac{1}{n-1}\lambda^2.
+\]
+
+This proves the claim.
+\end{proof}
+
+
+
+
+\section{Bipartite Graphs}
+
+A graph $X = (V, E)$ is called \emph{bipartite} if its vertex set $V$ can be partitioned 
+into two disjoint sets $V_1$ and $V_2$ such that every edge of $X$ has one endpoint in 
+$V_1$ and the other in $V_2$.
+
+\begin{theorem}
+If $X$ is bipartite, and $\lambda > 0$ is an eigenvalue of the adjacency matrix $A$ 
+of $X$ with multiplicity $m$, then $-\lambda$ is also an eigenvalue with multiplicity $m$.
+\end{theorem}
+
+\begin{proof}
+Assume that $X$ is a bipartite graph whose partite sets have sizes $r$ and $s$, 
+respectively. Label the vertices so that the adjacency matrix $A$ has the form
+\[
+A = \begin{pmatrix}
+0_r & B \\
+B^T & 0_s
+\end{pmatrix},
+\]
+where $B$ is an $r \times s$ matrix.
+
+Let $\lambda > 0$ be an eigenvalue of $A$ with eigenvector
+\[
+w = \begin{pmatrix} u \\ v \end{pmatrix},
+\]
+where $u \in \mathbb{R}^r$ and $v \in \mathbb{R}^s$, not both zero. Then
+\[
+Aw = \lambda w
+\;\Longrightarrow\;
+\begin{cases}
+\lambda u = Bv, \\
+\lambda v = B^T u.
+\end{cases}
+\]
+
+Define
+\[
+w' = \begin{pmatrix} u \\ -v \end{pmatrix}.
+\]
+Then
+\[
+Aw' = 
+\begin{pmatrix}
+0 & B \\
+B^T & 0
+\end{pmatrix}
+\begin{pmatrix}
+u \\ -v
+\end{pmatrix}
+=
+\begin{pmatrix}
+- Bv \\
+B^T u
+\end{pmatrix}
+=
+\begin{pmatrix}
+-\lambda u \\
+\lambda v
+\end{pmatrix}
+= (-\lambda) w'.
+\]
+
+Since $w \neq 0$, we also have $w' \neq 0$. Hence $-\lambda$ is an eigenvalue of $A$.
+
+A collection of $m$ linearly independent eigenvectors corresponding to $\lambda$ 
+gives rise to $m$ linearly independent eigenvectors corresponding to $-\lambda$. 
+Thus the multiplicity of $-\lambda$ is at least that of $\lambda$. Repeating the 
+argument with $-\lambda$ in place of $\lambda$ shows that the multiplicities are equal.
+\end{proof}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{thebibliography}{9}
+
+\bibitem[RB]{bapat}
+R. B. Bapat,
+\textit{Graphs and Matrices},
+Universitext, Springer, London, 2010.
+
+\bibitem[RMC]{murty}
+{M. Ram Murty, Sebastian M. Cioabă}, 
+\textit{A First Course in Graph Theory and Combinatorics},
+Springer, 2023.
+
+\end{thebibliography}
+
+\end{document}
