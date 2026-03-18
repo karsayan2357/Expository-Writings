@@ -131,7 +131,7 @@ A graph $X = (V, E)$ is called \emph{bipartite} if its vertex set $V$ can be par
 into two disjoint sets $V_1$ and $V_2$ such that every edge of $X$ has one endpoint in 
 $V_1$ and the other in $V_2$.
 
-\begin{theorem}
+\begin{theorem}\label{bip_mul}
 If $X$ is bipartite, and $\lambda > 0$ is an eigenvalue of the adjacency matrix $A$ 
 of $X$ with multiplicity $m$, then $-\lambda$ is also an eigenvalue with multiplicity $m$.
 \end{theorem}
@@ -147,10 +147,7 @@ B^T & 0_s
 \]
 where $B$ is an $r \times s$ matrix.
 
-Let $\lambda > 0$ be an eigenvalue of $A$ with eigenvector
-\[
-w = \begin{pmatrix} u \\ v \end{pmatrix},
-\]
+Let $\lambda > 0$ be an eigenvalue of $A$ with eigenvector $w = \begin{pmatrix} u \\ v \end{pmatrix}$,
 where $u \in \mathbb{R}^r$ and $v \in \mathbb{R}^s$, not both zero. Then
 \[
 Aw = \lambda w
@@ -161,11 +158,7 @@ Aw = \lambda w
 \end{cases}
 \]
 
-Define
-\[
-w' = \begin{pmatrix} u \\ -v \end{pmatrix}.
-\]
-Then
+Define, $w' = \begin{pmatrix} u \\ -v \end{pmatrix}.$. Then,
 \[
 Aw' = 
 \begin{pmatrix}
@@ -196,16 +189,160 @@ Thus the multiplicity of $-\lambda$ is at least that of $\lambda$. Repeating the
 argument with $-\lambda$ in place of $\lambda$ shows that the multiplicities are equal.
 \end{proof}
 
+\begin{theorem}[Spectral Characterization of Bipartite Graphs]
+Let $X$ be a graph on $n$ vertices with adjacency matrix $A$ and eigenvalues 
+$\lambda_1 \ge \cdots \ge \lambda_n$. The following statements are equivalent:
+\begin{enumerate}
+\item The graph $X$ is bipartite.
+\item The spectrum of $X$ is symmetric with respect to zero.
+\item $ t^{-(n\text{ mod }2)}\det\left( tI_n-A \right)\in \mathbb{R}[t^2].$
+\item For any odd natural number $k$, $\sum_{j=1}^n \lambda_j^k = 0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+The implication (1) $\Rightarrow$ (2) was proved in Theorem~\ref{bip_mul}. To see that (2) $\Rightarrow$ (3), note that when $n$ is even, for any positive 
+eigenvalue $\lambda$ of multiplicity $m$, we also have the eigenvalue $-\lambda$ 
+with the same multiplicity $m$. Hence the factors
+\[
+(t - \lambda)^m (t + \lambda)^m = (t^2 - \lambda^2)^m,
+\]
+which is a polynomial in $t^2$. The eigenvalue $0$ has even multiplicity, and 
+therefore $\det(tI_n - A)$ is a polynomial in $t^2$. When $n$ is odd, a similar argument applies, except that the multiplicity of $0$ 
+is odd. Hence $t^{-1}\det(tI_n - A)$ is a polynomial in $t^2$. The implications (3) $\Rightarrow$ (2) and (2) $\Rightarrow$ (4) are trivially true. To see that (4) $\Rightarrow$ (1), note that condition (4) implies that the number 
+of closed walks of odd length is zero. Therefore, $X$ has no odd cycles, and hence 
+is bipartite. This completes the proof.
+\end{proof}
 
 
 
+\section{Upper Bound on Diameter}
+
+The \emph{diameter} of a connected graph $X = (V, E)$ is defined as
+\[
+\operatorname{diam}(X) = \max_{x,y \in V} d(x,y).
+\]
+If $A$ is the adjacency matrix of $X$, the set of polynomials in $A$ with real 
+coefficients is a vector space over $\mathbb{R}$. It is called the \emph{adjacency 
+algebra} of $X$, and its dimension equals the number of distinct eigenvalues of $X$.
+
+\begin{theorem}
+If $X$ is a connected graph whose adjacency matrix has $r$ distinct eigenvalues, 
+then $\operatorname{diam}(X) \le r - 1$.
+\end{theorem}
+
+\begin{proof}
+Let $d = \operatorname{diam}(X)$. We show that $I_n, A, \dots, A^d$ are linearly 
+independent matrices. Since the dimension of the adjacency algebra is $r$, this 
+implies that $d + 1 \le r$, which proves the theorem.
+
+To show that $I_n, A, \dots, A^d$ are linearly independent, we prove that for any 
+$1 \le k \le d$, the matrix $A^k$ cannot be written as a linear combination of 
+$I_n, A, \dots, A^{k-1}$.
+
+Fix $1 \le k \le d$ and choose vertices $x, y \in V$ such that $d(x,y) = k$. 
+Then there exists an $(x,y)$-path of length $k$, and there are no $(x,y)$-walks 
+of length $\ell$ for any $\ell < k$. By Theorem~\ref{clowalk},
+\[
+A^k(x,y) > 0 \quad \text{and} \quad A^\ell(x,y) = 0 \text{ for all } \ell < k.
+\]
+Therefore, $A^k$ cannot be written as a linear combination of 
+$I_n, A, \dots, A^{k-1}$. This completes the proof.
+\end{proof}
+
+This bound is actually sharp. Take $K_n$, the adjacency matrix $A = (A(x,y)) = J_n - I_n$, i.e., $A(x,y) = 1 - \delta(x,y)$. We know the characteristic polynomial of $J_n$ is $t^{n-1}(t-n)$, thus the characteristic polynomial of $A$ is $(t+1)^{n-1}(t - n+1)$, thus only two distinct eigenvalues of $A$ and diameter of $K_n$ is 1.
 
 
+\section{Laplacian Matrices}
 
+First consider $X$ as a directed graph. For each edge $e$, one of its endpoints becomes the \emph{tail} and the other endpoint is the \emph{head} of the directed edge.
 
+Given such a direction on $X$, the \emph{directed incidence matrix} $N$ is defined 
+as follows. Its rows are indexed by the vertex set $V$ and its columns by the edge 
+set $E$. For $x \in V$ and $e \in E$,
+\[
+N(x,e) =
+\begin{cases}
++1, & \text{if $x$ is the head of $e$}, \\
+-1, & \text{if $x$ is the tail of $e$}, \\
+0, & \text{otherwise}.
+\end{cases}
+\]
 
+Also denote by $D$ the $V \times V$ diagonal matrix whose $(x,x)$-entry equals 
+the degree of the vertex $x$. We call $D$ the \emph{diagonal degree matrix} of $X$. 
 
+ The \emph{Laplacian matrix} $L$ of a graph $X$ is defined as $L = D - A$, where 
+$D$ is the diagonal degree matrix of $X$ and $A$ is the adjacency matrix of $X$. 
+This is another important matrix associated to a graph, and we summarize its basic 
+properties below.
 
+We have seen before that spectrum of adjacency matrix can determine whether a graph is bipartite or not but it can not guarantee connectedness of a graph. For example, take $C_4$ with an isolated vertex and $K_{1,4}$, both have the same spectrum but one is connected and the other is not.
+
+\begin{theorem}
+Let $X = (V, E)$ be a graph and let $N$ be a directed incidence matrix of $X$.
+\begin{enumerate}
+\item The Laplacian matrix $L$ equals $NN^T$.
+\item The Laplacian matrix $L$ is real and symmetric, and its eigenvalues are nonnegative.
+\item The smallest eigenvalue of $L$ is $0$, and its multiplicity equals the number of connected components of $X$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) Let $x, y \in V$. If $x = y$, then the $(x,x)$-entry of $L$ is $d(x)$. Also,
+\[
+(NN^T)(x,x) = \sum_{e \in E} N(x,e)N^T(e,x) 
+= \sum_{e \in E} N^2(x,e) = d(x).
+\]
+
+If $x \ne y$ and $x \sim y$, then $L(x,y) = -1$. Let $f$ be the edge connecting 
+$x$ and $y$. Regardless of its direction, $N(x,f)N(y,f) = -1$, while for any 
+other edge $e \ne f$, $N(x,e)N(y,e) = 0$. Hence,
+\[
+(NN^T)(x,y) = \sum_{e \in E} N(x,e)N(y,e) = -1.
+\]
+
+If $x \ne y$ and $x \not\sim y$, then $L(x,y) = 0$. In this case, for any 
+$e \in E$, $N(x,e)N(y,e) = 0$, and therefore
+\[
+(NN^T)(x,y) = 0.
+\]
+Thus, $L = NN^T$.
+
+\medskip
+
+(2) Since $D$ and $A$ are real and symmetric and $L = D - A$, it follows that 
+$L$ is real and symmetric. Let $\mu$ be an eigenvalue of $L$ with eigenvector $u$. 
+Then
+\[
+\mu u = Lu = NN^T u.
+\]
+Multiplying on the left by $u^T$, we obtain
+\[
+\mu\, u^T u = u^T NN^T u = (N^T u)^T (N^T u).
+\]
+Since $u \ne 0$, we have $u^T u = \sum_{x \in V} u_x^2 > 0$, and hence
+\[
+\mu = \frac{(N^T u)^T (N^T u)}{u^T u}
+= \frac{\sum_{xy \in E} (u_x - u_y)^2}{\sum_{x \in V} u_x^2} \ge 0.
+\]
+
+\medskip
+
+(3) Let $\mathbf{1}$ be the all-ones vector. Then each row of $L$ sums to zero, so 
+$L\mathbf{1} = 0$. Hence $0$ is an eigenvalue of $L$. Assume $X$ is connected. Let $u$ be an eigenvector corresponding to $0$. Then
+\[
+0 = \frac{\sum_{xy \in E} (u_x - u_y)^2}{\sum_{x \in V} u_x^2},
+\]
+which implies that $u_x = u_y$ for every edge $xy \in E$. Since $X$ is connected, 
+it follows that $u_x = u_y$ for all $x, y \in V$. Thus $u$ is a scalar multiple of 
+$\mathbf{1}$, and the multiplicity of $0$ is $1$.
+
+In general, $L$ can be written as a block diagonal matrix whose diagonal blocks are 
+the Laplacian matrices of the connected components of $X$. The result follows.
+\end{proof}
+
+Now we have a sufficient condition for a graph to be connected. If the Laplacian Matrix of the graph has eigenvalue $0$ with multiplicity $1$, then the graph is connected.
 
 
 
