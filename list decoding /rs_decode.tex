@@ -1,1 +1,284 @@
-\section{Decoding of Reed-Solomon Codes}
+\chapter{Decoding of Reed-Solomon Codes}
+
+\section{Introduction}
+
+Having been built an introduction to the concept of \emph{list-decoding}, we shall see its implementation on a ``good code", namely the Reed Solomon Code. But first we shall the \emph{Unique Decoding} of Reed-Solomon Code, then jump into the list decoding setup. Consider the $[n,k,d=n-k+1]_q$ RS code over the field $\bbf_q$ with the evaluation points $(\alpha_1,\ldots,\alpha_n)\in\bbf_q^n$.
+
+\section{Unique Decoding of Reed-Solomon codes}
+The problem of RS code unique decoding is the following:
+
+\noindent
+\begin{problem}[Reed-Solomon Unique Decoding]
+	\noindent
+ \begin{itemize}
+ 	\item(Input) $\bbf_q$, $(\alpha_1,\ldots,\alpha_n)\in\bbf_q^n$, $k$ and recieved word $\bfy\in\bbf_q^n$.
+ 	\item(Output) $P(X)\in\bbf_q[X]$ of degree less than or equal to $k-1$ such that $e = \Delta(\bfy, (P(\alpha_i))_{i=1}^n)<(n-k+1)/2$, if such polynomial exists or return fail.
+ \end{itemize}
+\end{problem}
+
+Before going into the actual algorithm for this problem, we need to define a few things and also some ideas to prove the correctness of this algorithm.
+
+\begin{definition}[Error-Locator Polynomial]
+	For a transmitted polynomial $P(X)$, a non-zero polynomial $E(X)$ is called an \emph{error-locator polynomial} if for all $i\in[n]$, we have:
+	\[
+	E(\alpha_i) = 0 \text{ if } y_i \neq P(\alpha_i).
+	\]
+\end{definition}
+One possible candidate error-locator polynomial is:
+\[
+E(X) = \prod_{\substack{i\in[n] \\ y_i = P(\alpha_i)}} (X-\alpha_i). 
+\]
+
+Also note that for all $i\in[n]$, 
+\begin{equation}\label{constraint}
+y_iE(\alpha_i) = E(\alpha_i)P(\alpha_i).
+\end{equation}
+
+Here both $E(X)$ and $P(X)$ are unknown and we want to find out P(X) for this problem. Also it would suffice if we knew $E(X)$ only, but to solve the $n$ constraints in (\ref{constraint}), we need to find solution to these $n$ quadratic equations with the variables being the coefficients of $E(X)$ and $P(X)$. This is a hard problem to do, thus we linarize this to solve this particular problem in polynomial time.  To perform this linearization, define $N(X) = P(X)E(X)$ and notice that $N(X)$ has degree less than or equal to $e+k-1$, so if we know $N(X)$ and $E(X)$, then we are done. Algorithm~\ref{alg:welch} guararntees to give such $N(X)$ and $E(X)$ in polynomial time.
+
+\begin{algorithm}\label{alg:welch}
+	\caption{\large Welch-Berlekamp Algortihm}
+	\begin{algorithmic}[1]
+		\large
+		\Input $n\geq k\geq 1$, $0<e<(n-k+1)/2$ and $n$ pairs $\{(\alpha_i),y_i\}_{i=1}^n$ with $\alpha_i$'s distinct.
+		\Output Polynomial $P(X)$ of degree at most $k-1$ or fail.
+		
+		\State Compute a non-zero polynomial $E(X)$ of degree $e$, and a polynomial $N(X)$ of degree at most $e+k-1$ such that $N(\alpha_i) = y_iE(\alpha_i)$ for all $i\in[n]$.	
+		\If {$E(X)$ and $N(X)$ as above do not exist or $E(X)$ does not divide $N(X)$} 
+		
+		\State	\Return fail
+		\EndIf
+		\State $P(X)\leftarrow \frac{N(X)}{E(X)}$.
+		\If {$\Delta(\bfy, (P(\alpha_i))_{i=1}^n)>e$}
+		
+	\State	\Return fail
+		\Else
+		
+		\State\Return $P(X)$
+	   \EndIf
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection*{Correctness of Algorithm~\ref{alg:welch}}
+
+\begin{theorem}[]
+	If $(P(\alpha_i))_{i=1}^n$ is transmitted, with $\deg P\leq k-1$ and at most $e<(n-k+1)/2$ errors occur, then Welch-Berlekamp Algorithm outputs $P(X)$. 
+	
+\end{theorem}
+Before going to the proof of this theorem, notice that this algorithm uniquely decodes the RS code of rate $R$ for up to (1-R)/2 fraction of errors.
+	
+\noindent
+\begin{claim}[]	\label{clm:interpolation}
+  	There exists polynomials E(X) and N(X) over $\bbf_q$ satifying Step 1 such that $\frac{N(X)}{E(X)}=P(X)$.
+\end{claim}
+
+\begin{proof}
+	Taking $E(X)$ to be an error-locating polynomial of $P(X)$, we define $N(X) = E(X)P(X)$. To be precise, we are taking $E(X)$ to be the polynomial 
+	\[
+	E(X) = X^{e - \Delta(\bfy, (P(\alpha_i))_{i=1}^n)}\prod_{\substack{i\in[n]\\y_i = P(\alpha_i)}}(X - \alpha_i)
+	\]
+	so that $\deg(E(X)) = e$ and thus $\deg(N(X)) \leq e+k-1$. Also by just the definition of $E(X), N(X)$, we can conclude that $N(\alpha_i) = y_iE(\alpha_i)$ for all $i\in[n]$.
+\end{proof}
+
+So we have proved that such a pair of polynomials exists, now the main challenges lies for the Step 4 as we might have a pair $(E',N')$ satisfying Step 1 but $\frac{N'}{E'}\neq P$. Though the next claim solidifies the fact that we shall have the same polynomial from any pair (E,N) after the execution of Step 1,2 and 3.
+
+\begin{claim}[]
+	\label{clm:rootfind}
+	If any two distinct solutions $(E_1,N_1)$ and $(E_2, N_2)$ satisfy Step 1, the we have:
+	\[
+		\frac{N_1}{E_1} = \frac{N_2}{E_2}.	
+	\]
+\end{claim}
+\begin{proof}
+	We define the polynomial $R(X)$ like following:
+	\[
+		R(X) = N_1(X)E_2(X) - N_2(X)E_1(X).
+	\]
+Observe that $\deg(R)\leq 2e + k - 1 < n$, by the condition on $e$. But for all $i\in[n]$, 
+\[
+	R(\alpha_i) = y_iE_1(\alpha_i)E_2(\alpha_i) - y_iE_1(\alpha_i)E_2(\alpha_i) = 0.
+\]
+Hence $R$ has to be the zero polynomial, thus we are done.
+
+
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{alg:welch}]
+	From Claim~\ref{clm:interpolation}, we ensure that a solution $(E,N)$ exists such that $N(X)/E(X) = P(X)$, thus the algorithm outputs a pair $(E',N')$ satisfying Step 1 and by Claim~\ref{clm:rootfind}, we ensure that $\frac{N'}{E'} = P$.
+\end{proof}
+
+
+\section{List-Decoding of Reed-Solomon Codes \& A Basic Algorithm}
+
+In Question~\ref{main}, we asked if it possible to list decode a code of rate $R$ upto $1-\sqrt{R}$ fraction of errors, given that it meets the Singleton bound, i.e, $\delta = 1 - R$. The answer to this question is affirmative for Reed-Solomon codes which we shall gradually prove. The setup of the problem for this section is the following:
+\begin{problem}[Reed-Solomon List-Decoding]
+	\noindent
+	\begin{itemize}
+		\item (Input) $\bbf_q$, $(\alpha_1,\ldots,\alpha_n)\in\bbf_q^n$, $k$ and recieved word $\bfy\in\bbf_q^n$.
+		\item (Output) A list of polynomials over $\bbf_q$ of degree less than $k$ such that the number of agreement points, i.e., $t := \#\{i\in[n] | y_i = P(\alpha_i)\} \geq n - e$.
+	\end{itemize}
+\end{problem}
+
+Our goal is to minimize $t$ as much as possible and Johnson bound allows us to make $t$ as small as $\sqrt{nk}$, which is ofcourse better than the unique decoding setup by AM-GM inequality, as there $t$ was $(n+k)/2$. We shall modify the \emph{Welch-Berlekamp Algorithm} a bit to solve the Reed-Solomon list-decoding problem. The main setup of the Welch Berlekamp Algorithm can be given by the two steps as following:
+
+\begin{enumerate}
+	\item (Interpolation) Find a non-zero $Q(X,Y)$ so that for all $i\in[n]$, $Q(\alpha_i, y_i) = 0$.
+	\item (Root Finding) If $Y - P(X)$ is a factor of $Q(X,Y)$, then output $P(X)$.
+\end{enumerate}
+
+The equivalence of Welch-Berlekamp and the above two steps is apparent by taking $Q(X,Y) = YE(X) - N(X)$ and $Y - P(X)$ divides $Q(X,Y)$ if and only if $P(X) = N(X)/E(X)$. For List-Decoding, Step 1 can be taken care of by giving some kind of bound to te degree of $Q(X,Y)$ then applying \emph{Gaussian Elimination} and Step 2 can be taken care of by any fast polynomial factorization algorithm, i.e., can be solved in linear time.
+
+We shall see three algorithms for solving the List-Decoding of RS codes with better amount of fraction of errors to each other in order. First we shall see the Basic List-Decoding with fraction of errors $1 - 2\sqrt{R}$, then Weighted Degree List-Decoding with fraction of errors $1 - \sqrt{2R}$ and finally the Multiplicity List-Decoding with fraction of errors $1 - \sqrt{R}$, hence finally getting to the Johnson Bound.
+
+
+\begin{algorithm}\label{alg:basic}
+	\large
+	\caption{\large Basic List-Decoding Algorithm for Reed-Solomon Codes}
+	\begin{algorithmic}[1]
+		\Input $n\geq k\geq 1$, $l\geq 1$, $e = n - t$ and $n$ pairs $\{(\alpha_i, y_i)\}_{i = 1}^n$.
+		\Output A list of polynomials $P(X)$ of degree at most $k-1$.
+		
+		\State \textbf{Step 1.} Compute a non-zero $Q(X,Y)\in\bbf_q[X,Y]$ with $\deg_X(Q)\leq l$, $\deg_Y(Q)\leq n/l$ such that 
+		\[
+			Q(\alpha_i, y_i) = 0 \quad\text{for all $i\in[n]$}.
+		\]
+		\State \textbf{Step 2.} Factor $Q(X,Y)$ into irreducible factors $Q_1(X,Y), Q_2(X,Y), \ldots, Q_m(X,Y)$.
+		\State $L \leftarrow \phi$.
+		\For {every factor $Q_j(X,Y) = Y - P_j(X)$ of $Q(X,Y)$}
+			\If {$\Delta(\bfy, (P(\alpha_i))_{i = 1}^n)\leq e$ and $\deg(P_j)\leq k-1$}
+				\State $L \leftarrow P_j(X)$.
+			\EndIf
+		\EndFor
+		\State\Return $L$. 
+	\end{algorithmic}
+\end{algorithm}
+
+\subsection*{Proof of Correctness of Algorithm~\ref{alg:basic}}
+  First we need to show that the coefficients of $Q(X,Y)$ are more than the number of constraits, i.e., $n$, so that we can do the interpolation. Ofcourse this is true as the number of coefficients of are is $(l+1)(n/l+1)>n$, so such $Q(X,Y)$ exists. 
+  
+  Now to ensure the root finding step, we need to show that for every polynomial $P(X)$ of degree at most $k-1$ in the list $L$ at the final step, if agrees with $Y$ in at least $t$ positions, then $Y - P(X)$ divides $Q(X,Y)$. For this, consider the polynomial $R(X) = Q(x, P(X))$ and 
+  \[
+  \deg(R)\leq l + \frac{n(k-1)}{l}.
+  \]
+Observe that $Y - P(X)$ divides $Q(X,Y)$ if and only if $R(X)\equiv0$. Also $R(X)$ has at least $t$ roots. So for $R(X)$ to be constant 0, we can have $t>\deg(R)$ to get a contradiction via Degree Mantra. Hence,
+\[
+	t > l + \frac{n(k-1)}{l}
+\]
+would be helpful for us. If we take $l = \sqrt{n(k-1)}$, we get $t>2\sqrt{n(k-1)}$. So we can list-decode for up to $1 - 2\sqrt{R}$ fraction of errors.\hfill$\square$
+
+\section{Optimizing the List-Decoding Algorithm}
+
+In this section, we shall try to optimize the Basic List-Decodign Algorithm and to get past that $1 - 2\sqrt{R}$ fraction of errors bound. First we shall see an algorithm using weighted degrees with which we can list-decode up to $1 - \sqrt{2R}$ fraction of errors and then an algorithm using multiplicities with which we can extend that to $1 - \sqrt{R}$.
+
+\begin{definition}[]
+	\label{def:weight}
+	For a bivariate polynomial $Q(X,Y)$, the $(1, w)$\emph{-weighted degree} of the monomial $X^iY^j$ is $i + wj$ and the $(1,w)$\emph{-weighted degree} of $Q(X,Y)$ is the maximum $(1,w)$-weighted degree of all the monomials in $Q(X,Y)$.
+\end{definition}
+
+We now precisely describe the Weighted Degree List-Decoding Algorithm next.
+
+\begin{algorithm}\label{alg:weight}
+	\large
+  \caption{\large Weighted Degree List-Decoding Algorithm for Reed-Solomon Codes}
+  \begin{algorithmic}[1]
+  	\large
+	\Input $n\geq k\geq 1$, $D\geq1$, $e = n - t$ and $n$ pairs $\{(y_i, P(\alpha_i))_{i=1}^n\}$.
+	\Output A list of polynomials of degree at most $k-1$.
+	\State Compute a polynomial $Q(X,Y)$ of $(1,k-1)$-weighted degree at most $D$ such that $Q(\alpha_i,y_i) = 0$ for all $i\in[n]$.
+	\State $L\leftarrow\phi$.
+	\For {every factor $Y - P(X)$ of $Q(X,Y)$} 
+	\If {$\Delta(\bfy, (P(\alpha_i))_{i = 1}^n) \leq e$ and $\deg(P)\leq k -1$}
+	\State $L\leftarrow P(X)$.
+	\EndIf
+	\EndFor
+	
+	\State \Return $L$
+  \end{algorithmic}
+\end{algorithm}
+
+Note that like in the previous algorithm, we are have the degree of $R(X) = Q(X,P(X))$ to be less than or equal to $\deg_X(Q) + (k-1)\deg_Y(Q) \leq D$, so we need to take $t>D$, thus somehow claim $t>\sqrt{2n(k-1)}$. Also we don't need to bother about the second step because of the same reason as before.
+
+\subsection*{Proof of Correctness of Algorithm~\ref{alg:weight}}
+For the interpolation part, we need to study the total numebr of coefficients of $Q(X,Y)$. Write $Q$ as the following:
+\[
+	Q(X,Y) = \sum_{\substack{0\leq i, j \leq D \\ i + wj \leq D}}c_{ij}X^iY^j.
+\]
+ The total number of coefficients in $Q$ is exactly the sum 
+ \begin{align}
+ \sum_{i = 0}^D\sum_{j = 0}^{\frac{D - i}{k-1}}1 
+ & = \sum_{i = 0}^D\left(\frac{D-i}{k-1} + 1\right) \\
+ & = \frac{2k(D+1) + D^2 -3D - 2}{2(k-1)}\\
+ & \geq \frac{D(D+2)}{2(k-1)}.\label{D(D+2)} 
+ \end{align}
+ Here the inequality in (\ref{D(D+2)}) can be obtained via some basic algebraic manipulations. Now if we choose $D = \sqrt{2n(k-1)}$, we have this sum to be greater than $n$. Thus having $t>\sqrt{2n(k-1)}$.\hfill$\square$
+ 
+ \begin{theorem}[Weighted Degree List-Decoding]
+ 	\label{th:weight}
+	Algorithm~\ref{alg:weight} can list-decode Reed-Solomon codes of rate $R$ from up to $1 - \sqrt{2R}$ fraction of errors. Further, the algorithm runs in polynomial time with output list size at most $O(1/\sqrt{R})$.
+ \end{theorem}	
+ 
+  Note that if the list size is $l$, then $(k-1)\cdot l$ is less than $D$, hence $l$ is $O(1/\sqrt{R})$.
+ 
+ \subsection*{Multiplicity List Decoding}
+ 
+ We now impose more conditions on the degree of $Q$ by introducing the concept of multipliccity.
+ 
+ \begin{definition}[]
+ 	We say a bivariate polynomial $Q(X,Y)\in\mathbb{F}_q[X,Y]$ has $r$ zeroes at $(0,0)$ for some $r\in\mathbb{N}$ if there is no monomial in $Q$ of degree less than or equal to $r-1$ and for $(a,b)\in\mathbb{F}_q^2$, we say $Q$ has $r$ zeroes at $(a,b)\in\mathbb{F}_q^2$ if $Q_{a,b}(X,Y) := Q(X+a ,Y+b)$ has $r$ zeroes at $(0,0)$.
+ \end{definition}
+ 
+ \begin{algorithm}\label{multiplicity}
+ 	\large
+ 	\caption{\large Multiplicity List-Decoding Algorithm for Reed-Solomon Codes}
+ 	\begin{algorithmic}[1]
+ 		\large
+ 		\Input $n\geq k\geq 1$, $D\geq1$, $r\ge1$, $e = n - t$ and $n$ pairs $\{(y_i, P(\alpha_i))_{i=1}^n\}$.
+ 		\Output A list of polynomials of degree at most $k-1$.
+ 		\State Compute a polynomial $Q(X,Y)$ of $(1,k-1)$-weighted degree at most $D$ such that $Q(\alpha_i,y_i) = 0$ with multiplicity $r$ for all $i\in[n]$.
+ 		\State $L\leftarrow\phi$.
+ 		\For {every factor $Y - P(X)$ of $Q(X,Y)$} 
+ 		\If {$\Delta(\bfy, (P(\alpha_i))_{i = 1}^n) \leq e$ and $\deg(P)\leq k -1$}
+ 		\State $L\leftarrow P(X)$.
+ 		\EndIf
+ 		\EndFor
+ 		\State \Return $L$
+ 	\end{algorithmic}
+ \end{algorithm}
+ 
+\subsection*{Proof of Correctness of Algorithm~\ref{multiplicity}}
+
+\begin{lemma}
+	For every $(\alpha_1, \ldots, \alpha_n)\in\mathbb{F}_q^n$ and every $r\in\mathbb{N}$, there exists $Q(X,Y)\in\mathbb{F}_q[X,Y]$ of $(1,k-1)$-weighted degree at most $r\sqrt{(1+1/r)nk}$ such that $Q$ has a zeroe at $(\alpha_i, y_i)$ of multiplicity $r$ for all $i\in[n]$.
+\end{lemma}
+\begin{proof}
+	We shall prove this claim by proving the following claims.
+	\begin{claim}
+		For each $i\in[n]$, there are $\binom{r+1}{2}$ constraints on coefficients of $Q$ corresponding to $Q(\alpha_i, y_i) = 0$.
+	\end{claim}
+	\begin{proof}
+		Let $Q_{a,b}(X,Y) = \sum_{i,j}c_{i,j}^{a,b}X^iY^j$ with the condition that $0\le i,j\le D$ and $i + (k-1)j\le D$ and $Q(X,Y) = \sum_{i',j'}c_{i',j'}X^{i'}Y^{j'}$ with the condition that $0\le i',j'\le D$ and $i' + (k-1)j'\le D$. Now we have,
+		\begin{align*}
+			Q_{a,b}(X,Y) 
+			& = \sum_{i,j}c_{ij}^{a,b}X^iY^j \\
+			& = \sum_{i',j'}c_{i'j'}(X+a)^i(Y+b)^j.
+		\end{align*}
+		Next observe that for all $i,j$, 
+		\[
+		c_{ij}^{a,b} =  \sum_{\substack{i'\geq i \\ j'\geq j}} \binom{i'}{i}\binom{j'}{j}c_{i'j'}a^{i'-i}b^{j'-j}.
+		\]
+		
+		We also have $c_{i,j}^{a,b} = 0$ for all $i+j<r$, thus we get total $n\binom{r+1}{2}$ constraints, $\binom{r+1}{2}$ corresponding to each $\alpha_i$. 
+	\end{proof}
+	
+	Now having this claim proved we move onto the proof of multiplicity if the points $(\alpha_i, y_i)$, i.e. we now show the proof of the following claim.
+	
+	\begin{claim}
+		R(X) := Q(X,P(X)) has $\alpha_i$ as a root woth multiplicity $r$ for all $i\in[n]$ such that $y_i = P(\alpha_i)$.
+	\end{claim}
+	\begin{proof}
+		
+	\end{proof}
+	
+\end{proof}
+
+\section{Conclusion}
